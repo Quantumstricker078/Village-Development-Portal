@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-success text-white text-center py-3">
+                <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Create New Account</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-user me-2"></i>Full Name
+                        </label>
+                        <input type="text" class="form-control" id="name" name="name" required
+                            placeholder="Enter your full name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope me-2"></i>Email Address
+                        </label>
+                        <input type="email" class="form-control" id="email" name="email" required
+                            placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-key me-2"></i>Password
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password" required
+                            placeholder="Enter a password (min 6 characters)">
+                        <small class="text-muted">Must be at least 6 characters long</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">
+                            <i class="fas fa-key me-2"></i>Confirm Password
+                        </label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                            required placeholder="Confirm your password">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 py-2">
+                        <i class="fas fa-user-check me-2"></i>Create Account
+                    </button>
+                </form>
+
+                <!-- Login Link Section -->
+                <hr class="my-4">
+                <div class="text-center">
+                    <p class="text-muted mb-3">Already have an account?</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-primary w-100 py-2">
+                        <i class="fas fa-sign-in-alt me-2"></i>Back to Login
+                    </a>
+                </div>
+
+                <!-- Info Section -->
+                <div class="mt-4 p-3 bg-light rounded">
+                    <h6><i class="fas fa-shield-alt me-2"></i>Account Information:</h6>
+                    <ul class="mb-0 small">
+                        <li>Your account information is secure and encrypted</li>
+                        <li>You can access government schemes and services</li>
+                        <li>Updates on notices and announcements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

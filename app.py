@@ -234,6 +234,58 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        # Validation
+        if not name or not email or not password or not confirm_password:
+            flash('All fields are required', 'error')
+            return render_template('register.html')
+        
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return render_template('register.html')
+        
+        if len(password) < 6:
+            flash('Password must be at least 6 characters long', 'error')
+            return render_template('register.html')
+        
+        conn = get_db()
+        cursor = conn.cursor()
+        
+        # Check if email already exists
+        cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+        existing_user = cursor.fetchone()
+        
+        if existing_user:
+            flash('Email already registered. Please log in or use a different email', 'error')
+            conn.close()
+            return render_template('register.html')
+        
+        # Create new user
+        try:
+            hashed_password = generate_password_hash(password)
+            cursor.execute(
+                'INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
+                (name, email, hashed_password, 'user')
+            )
+            conn.commit()
+            conn.close()
+            
+            flash('Account created successfully! Please log in with your credentials', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            conn.close()
+            flash(f'An error occurred during registration: {str(e)}', 'error')
+            return render_template('register.html')
+    
+    return render_template('register.html')
+
 @app.route('/logout')
 @login_required
 def logout():
