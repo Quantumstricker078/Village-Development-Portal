@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-file-alt me-2"></i>Government Schemes</h2>
+
+<!-- Category Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Filter by Category</h5>
+        <div class="btn-group flex-wrap" role="group">
+            <a href="/schemes" class="btn btn-outline-primary {{ 'active' if not selected_category }}">
+                <i class="fas fa-star me-2"></i>All Schemes
+            </a>
+            <a href="/schemes?category=Agriculture"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Agriculture' }}">
+                <i class="fas fa-tractor me-2"></i>Agriculture
+            </a>
+            <a href="/schemes?category=Education"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Education' }}">
+                <i class="fas fa-graduation-cap me-2"></i>Education
+            </a>
+            <a href="/schemes?category=Health"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Health' }}">
+                <i class="fas fa-hospital me-2"></i>Health
+            </a>
+            <a href="/schemes?category=Social Welfare"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Social Welfare' }}">
+                <i class="fas fa-hands-helping me-2"></i>Social Welfare
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Schemes List -->
+<div class="row">
+    {% if schemes %}
+    {% for scheme in schemes %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div
+                class="card-header bg-{{ 'success' if scheme.department == 'Agriculture' else 'info' if scheme.department == 'Education' else 'warning' if scheme.department == 'Health' else 'secondary' }} text-white">
+                <h6 class="mb-0">{{ scheme.department }}</h6>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ scheme.title }}</h5>
+                <p class="card-text">{{ scheme.description }}</p>
+
+                <div class="mb-2">
+                    <strong><i class="fas fa-check-circle text-success me-2"></i>Eligibility:</strong>
+                    <small>{{ scheme.eligibility }}</small>
+                </div>
+                <div class="mb-3">
+                    <strong><i class="fas fa-gift text-warning me-2"></i>Benefits:</strong>
+                    <small>{{ scheme.benefits }}</small>
+                </div>
+
+                {% if scheme.apply_link and scheme.apply_link != '#' %}
+                <a href="{{ scheme.apply_link }}" target="_blank" class="btn btn-primary btn-sm">
+                    <i class="fas fa-external-link-alt me-2"></i>Apply Now
+                </a>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="fas fa-calendar me-1"></i>Published: {{ scheme.published_on[:10] }}
+                </small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <h5><i class="fas fa-info-circle me-2"></i>No schemes available</h5>
+            <p class="mb-0">
+                {% if selected_category %}
+                No schemes found in {{ selected_category }} category.
+                {% else %}
+                No schemes available at the moment.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

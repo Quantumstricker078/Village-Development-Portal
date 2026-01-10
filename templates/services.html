@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-building me-2"></i>Local Services Directory</h2>
+
+<!-- Category Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Filter by Category</h5>
+        <div class="btn-group flex-wrap" role="group">
+            <a href="/services" class="btn btn-outline-primary {{ 'active' if not selected_category }}">
+                <i class="fas fa-home me-2"></i>All Services
+            </a>
+            <a href="/services?category=Health"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Health' }}">
+                <i class="fas fa-hospital me-2"></i>Health
+            </a>
+            <a href="/services?category=Education"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Education' }}">
+                <i class="fas fa-school me-2"></i>Education
+            </a>
+            <a href="/services?category=Police"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Police' }}">
+                <i class="fas fa-shield-alt me-2"></i>Police
+            </a>
+            <a href="/services?category=Bank"
+                class="btn btn-outline-primary {{ 'active' if selected_category == 'Bank' }}">
+                <i class="fas fa-university me-2"></i>Bank
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Services List -->
+<div class="row">
+    {% if services %}
+    {% for service in services %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div
+                class="card-header bg-{{ 'success' if service.category == 'Health' else 'info' if service.category == 'Education' else 'warning' if service.category == 'Police' else 'secondary' }} text-white">
+                <h6 class="mb-0">{{ service.category }} Services</h6>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ service.name }}</h5>
+
+                <div class="mb-3">
+                    <strong><i class="fas fa-phone me-2"></i>Contact:</strong>
+                    <div class="mt-1">
+                        <a href="tel:{{ service.contact_number }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-phone me-1"></i>{{ service.contact_number }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <strong><i class="fas fa-map-marker-alt me-2"></i>Address:</strong>
+                    <p class="mb-1 small">{{ service.address }}</p>
+                    <small class="text-muted">{{ service.city }}</small>
+                </div>
+
+                {% if service.in_charge %}
+                <div class="mb-2">
+                    <strong><i class="fas fa-user-tie me-2"></i>In Charge:</strong>
+                    <span class="small">{{ service.in_charge }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <h5><i class="fas fa-info-circle me-2"></i>No services available</h5>
+            <p class="mb-0">
+                {% if selected_category %}
+                No services found in {{ selected_category }} category.
+                {% else %}
+                No services available at the moment.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

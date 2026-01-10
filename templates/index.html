@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Hero Section -->
+        <div class="jumbotron p-5 mb-4">
+            <h1 class="display-4">Welcome to Village Development Portal</h1>
+            <p class="lead">Your one-stop solution for all village development information, government schemes, and
+                local services.</p>
+
+            <!-- Statistics Cards -->
+            <div class="row text-center mt-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card stats-card bg-success h-100">
+                        <div class="card-body">
+                            <h3>{{ schemes_count }}</h3>
+                            <p><i class="fas fa-file-alt me-2"></i>Active Schemes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card stats-card bg-info h-100">
+                        <div class="card-body">
+                            <h3>{{ beneficiaries_count }}</h3>
+                            <p><i class="fas fa-users me-2"></i>Beneficiaries</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card stats-card bg-warning h-100">
+                        <div class="card-body">
+                            <h3>{{ notices_count }}</h3>
+                            <p><i class="fas fa-bullhorn me-2"></i>Notices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-search me-2"></i>Search Portal</h5>
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control"
+                        placeholder="Search for schemes, notices, services...">
+                    <button class="btn btn-primary" onclick="performSearch()">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                </div>
+                <div id="searchResults" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Latest Notices -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Latest Notices</h5>
+            </div>
+            <div class="card-body">
+                {% if latest_notices %}
+                {% for notice in latest_notices %}
+                <div class="mb-3 p-3 border rounded">
+                    <h6 class="text-primary">
+                        <i class="fas fa-newspaper me-2"></i>{{ notice.title }}
+                    </h6>
+                    <p class="mb-2">{{ notice.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>
+                            Published: {{ notice.publish_date[:10] }}
+                        </small>
+                        {% if notice.attachment_url %}
+                        <a href="{{ notice.attachment_url }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-download me-1"></i>Attachment
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted text-center">
+                    <i class="fas fa-info-circle me-2"></i>No notices available at the moment.
+                </p>
+                {% endif %}
+                <a href="/notices" class="btn btn-outline-success w-100">
+                    <i class="fas fa-list me-2"></i>View All Notices
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Quick Links -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Links</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/about" class="btn btn-outline-primary text-start">
+                        <i class="fas fa-info-circle me-2"></i>About Project
+                    </a>
+                    <a href="/contact" class="btn btn-outline-success text-start">
+                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    </a>
+                    <a href="/acknowledgements" class="btn btn-outline-warning text-start">
+                        <i class="fas fa-heart me-2"></i>Special Thanks
+                    </a>
+                    <a href="/schemes" class="btn btn-outline-primary text-start">
+                        <i class="fas fa-file-alt me-2"></i>Government Schemes
+                    </a>
+                    <a href="/services" class="btn btn-outline-success text-start">
+                        <i class="fas fa-building me-2"></i>Local Services
+                    </a>
+                    <a href="/notices" class="btn btn-outline-info text-start">
+                        <i class="fas fa-bullhorn me-2"></i>Latest Notices
+                    </a>
+                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <a href="/admin/dashboard" class="btn btn-outline-warning text-start">
+                        <i class="fas fa-cog me-2"></i>Admin Dashboard
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheme Categories -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-folder me-2"></i>Scheme Categories</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="/schemes" class="list-group-item list-group-item-action">
+                        <i class="fas fa-star me-2"></i>All Schemes
+                    </a>
+                    <a href="/schemes?category=Agriculture" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tractor me-2"></i>Agriculture
+                    </a>
+                    <a href="/schemes?category=Education" class="list-group-item list-group-item-action">
+                        <i class="fas fa-graduation-cap me-2"></i>Education
+                    </a>
+                    <a href="/schemes?category=Health" class="list-group-item list-group-item-action">
+                        <i class="fas fa-hospital me-2"></i>Health
+                    </a>
+                    <a href="/schemes?category=Social Welfare" class="list-group-item list-group-item-action">
+                        <i class="fas fa-hands-helping me-2"></i>Social Welfare
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Categories -->
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-building me-2"></i>Service Categories</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="/services" class="list-group-item list-group-item-action">
+                        <i class="fas fa-home me-2"></i>All Services
+                    </a>
+                    <a href="/services?category=Health" class="list-group-item list-group-item-action">
+                        <i class="fas fa-hospital me-2"></i>Health Services
+                    </a>
+                    <a href="/services?category=Education" class="list-group-item list-group-item-action">
+                        <i class="fas fa-school me-2"></i>Education
+                    </a>
+                    <a href="/services?category=Police" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shield-alt me-2"></i>Police
+                    </a>
+                    <a href="/services?category=Bank" class="list-group-item list-group-item-action">
+                        <i class="fas fa-university me-2"></i>Bank
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

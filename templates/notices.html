@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-bullhorn me-2"></i>Village Notices & Announcements</h2>
+
+{% if notices %}
+{% for notice in notices %}
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+            <h5 class="card-title text-primary">{{ notice.title }}</h5>
+            <span class="badge bg-info">{{ notice.publish_date[:10] }}</span>
+        </div>
+        <p class="card-text mt-3">{{ notice.description }}</p>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+                <small class="text-muted">
+                    <strong>Valid Until:</strong> {{ notice.valid_until }}
+                </small>
+            </div>
+            {% if notice.attachment_url %}
+            <a href="{{ notice.attachment_url }}" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-download me-1"></i>Download Attachment
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="alert alert-info text-center">
+    <h5><i class="fas fa-info-circle me-2"></i>No notices available</h5>
+    <p class="mb-0">Check back later for new announcements.</p>
+</div>
+{% endif %}
+{% endblock %}

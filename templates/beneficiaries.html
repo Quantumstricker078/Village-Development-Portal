@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-users me-2"></i>Beneficiary Management</h2>
+
+<!-- Add Beneficiary Form -->
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Register New Beneficiary</h5>
+    </div>
+    <div class="card-body">
+        <form id="addBeneficiaryForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="name" required
+                            placeholder="Enter beneficiary name">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Age</label>
+                        <input type="number" class="form-control" name="age" required placeholder="Enter age" min="1"
+                            max="120">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Gender</label>
+                        <select class="form-control" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" class="form-control" name="mobile" required
+                            placeholder="Enter mobile number">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Scheme</label>
+                <select class="form-control" name="scheme_id" required>
+                    <option value="">Select Scheme</option>
+                    {% for scheme in schemes %}
+                    <option value="{{ scheme.id }}">{{ scheme.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">
+                <i class="fas fa-user-plus me-2"></i>Register Beneficiary
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Beneficiaries List -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Registered Beneficiaries</h5>
+    </div>
+    <div class="card-body">
+        {% if beneficiaries %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Scheme</th>
+                        <th>Mobile</th>
+                        <th>Status</th>
+                        <th>Registered On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for beneficiary in beneficiaries %}
+                    <tr>
+                        <td>{{ beneficiary.name }}</td>
+                        <td>{{ beneficiary.age }}</td>
+                        <td>{{ beneficiary.gender }}</td>
+                        <td>
+                            <small>{{ beneficiary.scheme_name }}</small>
+                        </td>
+                        <td>{{ beneficiary.mobile }}</td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'success' if beneficiary.status == 'Approved' else 'warning' if beneficiary.status == 'Pending' else 'secondary' }}">
+                                {{ beneficiary.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <small>{{ beneficiary.registered_on[:10] }}</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <h5><i class="fas fa-info-circle me-2"></i>No beneficiaries registered</h5>
+            <p class="mb-0">Use the form above to register new beneficiaries.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

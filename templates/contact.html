@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary mb-3">
+            <i class="fas fa-envelope me-2" aria-hidden="true"></i>Contact Us
+        </h1>
+        <p class="lead text-muted">Get in touch with us for any queries or support</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Our Location</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5><i class="fas fa-university me-2 text-primary" aria-hidden="true"></i>University Address
+                        </h5>
+                        <p class="mb-1">Department of Computer Applications</p>
+                        <p class="mb-1">School of Management Sciences</p>
+                        <p class="mb-1">University Campus, Academic Block</p>
+                        <p class="mb-0">City - 123456, State, Country</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5><i class="fas fa-clock me-2 text-success" aria-hidden="true"></i>Office Hours</h5>
+                        <p class="mb-1">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                        <p class="mb-1">Saturday: 9:00 AM - 1:00 PM</p>
+                        <p class="mb-0">Sunday: Closed</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5><i class="fas fa-phone me-2 text-info" aria-hidden="true"></i>Contact Numbers</h5>
+                        <p class="mb-1">Office: +91-9876543210</p>
+                        <p class="mb-1">Help Desk: +91-9876543211</p>
+                        <p class="mb-0">Technical Support: +91-9876543212</p>
+                    </div>
+
+                    <div>
+                        <h5><i class="fas fa-envelope me-2 text-warning" aria-hidden="true"></i>Email Addresses</h5>
+                        <p class="mb-1">General: info@villageportal.edu</p>
+                        <p class="mb-1">Support: support@villageportal.edu</p>
+                        <p class="mb-0">Technical: tech@villageportal.edu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-paper-plane me-2" aria-hidden="true"></i>Send us a Message</h4>
+                </div>
+                <div class="card-body">
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                placeholder="Enter your full name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                placeholder="Enter your email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone"
+                                placeholder="Enter your phone number">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <select class="form-select" id="subject" name="subject" required>
+                                <option value="" disabled selected>Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="scheme">Scheme Information</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required
+                                placeholder="Enter your message here..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-paper-plane me-2" aria-hidden="true"></i>Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0"><i class="fas fa-life-ring me-2" aria-hidden="true"></i>Quick Support</h4>
+        </div>
+        <div class="card-body">
+            <div class="row text-center gy-4">
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <i class="fas fa-question-circle display-4 text-primary mb-3" aria-hidden="true"></i>
+                        <h5>FAQ</h5>
+                        <p class="text-muted small">
+                            Check our frequently asked questions for quick answers.
+                        </p>
+                        <a href="#faqs" class="btn btn-outline-primary btn-sm">View FAQ</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <i class="fas fa-book display-4 text-success mb-3" aria-hidden="true"></i>
+                        <h5>Documentation</h5>
+                        <p class="text-muted small">
+                            Detailed guides and documentation for using the portal.
+                        </p>
+                        <a href="/docs" class="btn btn-outline-success btn-sm">View Docs</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <i class="fas fa-comments display-4 text-warning mb-3" aria-hidden="true"></i>
+                        <h5>Live Chat</h5>
+                        <p class="text-muted small">
+                            Chat with our support team for immediate assistance.
+                        </p>
+                        <button class="btn btn-outline-warning btn-sm">Start Chat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQs Section -->
+    <div class="card mt-5" id="faqs">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-question-circle me-2" aria-hidden="true"></i>Frequently Asked Questions
+                (FAQs)</h4>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="faqAccordion">
+                <!-- FAQ 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            <i class="fas fa-chevron-right me-2"></i>What is the Village Development Portal?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            The Village Development Portal is a comprehensive digital platform designed to provide
+                            villagers with easy access to government schemes, local services, community notices, and
+                            beneficiary information. It aims to bridge the gap between government services and rural
+                            communities.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq2">
+                            <i class="fas fa-chevron-right me-2"></i>How do I register as a new user?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            You don't need to register to browse schemes, services, and notices. However, to apply for
+                            schemes or register as a beneficiary, you can contact your local administrator or visit the
+                            registration section after logging in with your credentials.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq3">
+                            <i class="fas fa-chevron-right me-2"></i>How can I apply for government schemes?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            You can browse available schemes in the "Schemes" section. Each scheme has detailed
+                            information including eligibility criteria and benefits. Click the "Apply Now" button on the
+                            scheme card to proceed with your application through the provided link.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq4">
+                            <i class="fas fa-chevron-right me-2"></i>Where can I find local services?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Visit the "Services" section to view a comprehensive directory of local services including
+                            Health, Education, Police, and Banking services. You can filter by category and get contact
+                            details, addresses, and in-charge information for each service.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq5">
+                            <i class="fas fa-chevron-right me-2"></i>How do I track my beneficiary status?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Log in to your account and navigate to the "Beneficiaries" section to view your registration
+                            status. You can track the approval status of your applications and view details of approved
+                            schemes.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq6">
+                            <i class="fas fa-chevron-right me-2"></i>How often are notices updated?
+                        </button>
+                    </h2>
+                    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Notices are updated regularly as new announcements from the administration are received. We
+                            recommend checking the "Notices" section frequently for the latest updates and important
+                            announcements that may affect you.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 7 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq7">
+                            <i class="fas fa-chevron-right me-2"></i>Is my personal information secure?
+                        </button>
+                    </h2>
+                    <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we take data security seriously. Your personal information is encrypted and stored
+                            securely. We follow industry best practices to protect your privacy. Do not share your
+                            password with anyone, and always logout after using the portal.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 8 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq8">
+                            <i class="fas fa-chevron-right me-2"></i>What should I do if I encounter a technical issue?
+                        </button>
+                    </h2>
+                    <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            If you encounter any technical issues, please contact our technical support team at
+                            tech@villageportal.edu or call +91-9876543212. Provide details about the issue you're
+                            facing, and our team will assist you as soon as possible.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 9 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq9">
+                            <i class="fas fa-chevron-right me-2"></i>Can I provide feedback about the portal?
+                        </button>
+                    </h2>
+                    <div id="faq9" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we value your feedback! You can submit your suggestions and feedback through the
+                            contact form in this page. Select "Feedback" as the subject and let us know how we can
+                            improve the portal experience for you.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 10 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq10">
+                            <i class="fas fa-chevron-right me-2"></i>Is there a mobile app available?
+                        </button>
+                    </h2>
+                    <div id="faq10" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Currently, the portal is optimized for web access on both desktop and mobile browsers. You
+                            can access all features on your mobile device through any web browser. A dedicated mobile
+                            application may be available in the future.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function (event) {
+        // This prevents the default browser form submission
+        event.preventDefault();
+
+        // NOTE: The code below is a placeholder. In a real application,
+        // you would collect the form data and send it to your server
+        // using the fetch() API.
+
+        // Example:
+        // const formData = new FormData(this);
+        // fetch('/contact', {
+        //     method: 'POST',
+        //     body: formData
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     alert(data.message);
+        //     if(data.success) {
+        //         this.reset();
+        //     }
+        // })
+        // .catch(error => console.error('Error:', error));
+
+
+        // For demonstration purposes, we just show an alert.
+        alert('Thank you for your message! We will get back to you soon.');
+
+        // Reset the form fields
+        this.reset();
+    });
+</script>
+{% endblock %}
