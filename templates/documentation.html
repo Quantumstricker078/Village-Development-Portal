@@ -1,0 +1,712 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary mb-3">
+            <i class="fas fa-book me-2" aria-hidden="true"></i>Portal User Guide
+        </h1>
+        <p class="lead text-muted">Complete documentation to help you navigate and use the Village Development Portal
+        </p>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Table of Contents</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><a href="#getting-started" class="text-decoration-none">Getting Started</a></li>
+                        <li><a href="#dashboard" class="text-decoration-none">Dashboard Overview</a></li>
+                        <li><a href="#viewing-schemes" class="text-decoration-none">Viewing Schemes</a></li>
+                        <li><a href="#notices" class="text-decoration-none">Latest Notices</a></li>
+                        <li><a href="#services" class="text-decoration-none">Local Services</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><a href="#beneficiaries" class="text-decoration-none">Beneficiary Information</a></li>
+                        <li><a href="#search" class="text-decoration-none">Search Functionality</a></li>
+                        <li><a href="#account" class="text-decoration-none">Account Management</a></li>
+                        <li><a href="#admin" class="text-decoration-none">Administrator Guide</a></li>
+                        <li><a href="#faq" class="text-decoration-none">FAQ & Troubleshooting</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Getting Started -->
+    <div id="getting-started" class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fas fa-play-circle me-2"></i>Getting Started</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">Welcome to the Village Development Portal!</h6>
+            <p>This portal is designed to provide you with comprehensive information about:</p>
+            <ul>
+                <li><strong>Government Schemes:</strong> Information about various welfare and development schemes
+                    available to villagers</li>
+                <li><strong>Official Notices:</strong> Important announcements and updates from local administration
+                </li>
+                <li><strong>Local Services:</strong> Contact details and information about essential village services
+                </li>
+                <li><strong>Beneficiary Programs:</strong> Track beneficiaries and scheme allocations</li>
+            </ul>
+
+            <h6 class="text-primary mt-4 mb-3">First-Time Users</h6>
+            <ol>
+                <li>Visit the <strong>Home</strong> page to see the portal overview</li>
+                <li>Use the <strong>Navigation Menu</strong> at the top to access different sections</li>
+                <li>Explore <strong>Schemes</strong>, <strong>Notices</strong>, and <strong>Services</strong> tabs</li>
+                <li>For administrative access, use the <strong>Admin Login</strong> button in the top-right corner</li>
+            </ol>
+
+            <div class="alert alert-info mt-4">
+                <i class="fas fa-lightbulb me-2"></i><strong>Tip:</strong> You can access most features without logging
+                in. Administrative functions require admin credentials.
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Overview -->
+    <div id="dashboard" class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Overview</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">What You'll See on the Home Page</h6>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-success"><i class="fas fa-chart-bar me-2"></i>Statistics Cards</h6>
+                    <p>The home page displays key statistics:</p>
+                    <ul>
+                        <li><strong>Active Schemes:</strong> Total number of government schemes available</li>
+                        <li><strong>Beneficiaries:</strong> Total registered beneficiaries in the system</li>
+                        <li><strong>Notices:</strong> Current official notices and announcements</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-success"><i class="fas fa-search me-2"></i>Search Bar</h6>
+                    <p>Use the search functionality to quickly find:</p>
+                    <ul>
+                        <li>Specific government schemes</li>
+                        <li>Official notices and announcements</li>
+                        <li>Local services and contacts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h6 class="text-primary mb-3">Latest Updates Section</h6>
+            <p>The dashboard shows the most recent notices and schemes. Scroll down to see all updates or visit the
+                dedicated sections for complete details.</p>
+        </div>
+    </div>
+
+    <!-- Viewing Schemes -->
+    <div id="viewing-schemes" class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Viewing Government Schemes</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">How to Access Schemes</h6>
+            <ol>
+                <li>Click on <strong>"Schemes"</strong> in the navigation menu</li>
+                <li>You'll see a list of all available government schemes</li>
+                <li>Each scheme card displays key information</li>
+            </ol>
+
+            <h6 class="text-primary mt-4 mb-3">Information Available for Each Scheme</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Information</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Scheme Title</strong></td>
+                            <td>Name of the government scheme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Department</strong></td>
+                            <td>Government department managing the scheme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Description</strong></td>
+                            <td>Detailed information about the scheme objectives</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Eligibility</strong></td>
+                            <td>Who can apply for this scheme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Benefits</strong></td>
+                            <td>What benefits are provided under the scheme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Application Link</strong></td>
+                            <td>Where to apply (external link or portal)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h6 class="text-primary mt-4 mb-3">Tips for Using Schemes Section</h6>
+            <ul>
+                <li>Read the <strong>Eligibility</strong> criteria carefully before applying</li>
+                <li>Note down the <strong>Department</strong> contact for any queries</li>
+                <li>Check the <strong>Benefits</strong> section to understand what you'll receive</li>
+                <li>Use the search function to find schemes relevant to your needs</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Notices Section -->
+    <div id="notices" class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Latest Notices & Announcements</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">Understanding Notices</h6>
+            <p>Notices are official announcements from the local administration. They contain important information
+                about:</p>
+            <ul>
+                <li>Scheme updates and changes</li>
+                <li>Important dates and deadlines</li>
+                <li>Public holidays and office closures</li>
+                <li>New initiatives and programs</li>
+                <li>Document requirements and procedures</li>
+            </ul>
+
+            <h6 class="text-primary mt-4 mb-3">How to Access Notices</h6>
+            <ol>
+                <li>Click on <strong>"Notices"</strong> in the navigation menu</li>
+                <li>View notices in chronological order (newest first)</li>
+                <li>Click on a notice to see full details</li>
+                <li>Download attachments if available</li>
+            </ol>
+
+            <h6 class="text-primary mt-4 mb-3">Notice Information</h6>
+            <p>Each notice includes:</p>
+            <ul>
+                <li><strong>Title:</strong> Subject of the announcement</li>
+                <li><strong>Description:</strong> Full details of the notice</li>
+                <li><strong>Publish Date:</strong> When the notice was published</li>
+                <li><strong>Valid Until:</strong> Expiry date of the notice (if applicable)</li>
+                <li><strong>Attachments:</strong> Supporting documents (PDFs, images, etc.)</li>
+            </ul>
+
+            <div class="alert alert-warning mt-4">
+                <i class="fas fa-exclamation-triangle me-2"></i><strong>Important:</strong> Always check the notices
+                section regularly for updates that might affect you or your family.
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <div id="services" class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="fas fa-building me-2"></i>Finding Local Services</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">What Are Local Services?</h6>
+            <p>This section provides contact information and details about essential services available in the village,
+                including:</p>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <ul>
+                        <li>Gram Panchayat Office</li>
+                        <li>Government Schools</li>
+                        <li>Health Centers & Hospitals</li>
+                        <li>Veterinary Services</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li>Agricultural Services</li>
+                        <li>Water & Sanitation</li>
+                        <li>Power Supply Office</li>
+                        <li>Bank Branches</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h6 class="text-primary mb-3">How to Access Services</h6>
+            <ol>
+                <li>Click on <strong>"Services"</strong> in the navigation menu</li>
+                <li>Browse services by category</li>
+                <li>View contact information, address, and in-charge officer details</li>
+                <li>Note down the contact numbers for future reference</li>
+            </ol>
+
+            <h6 class="text-primary mt-4 mb-3">Service Information Provided</h6>
+            <ul>
+                <li><strong>Service Name:</strong> Official name of the service</li>
+                <li><strong>Category:</strong> Type of service</li>
+                <li><strong>Contact Number:</strong> Phone number to reach the service</li>
+                <li><strong>Address:</strong> Physical location of the office</li>
+                <li><strong>In-Charge Officer:</strong> Name of the person managing the service</li>
+                <li><strong>City/Village:</strong> Location details</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Beneficiaries -->
+    <div id="beneficiaries" class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-users me-2"></i>Beneficiary Information</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">Understanding Beneficiaries</h6>
+            <p>Beneficiaries are individuals who receive benefits from government schemes. The portal maintains records
+                of:</p>
+            <ul>
+                <li>Registered beneficiaries and their details</li>
+                <li>Schemes they are enrolled in</li>
+                <li>Status of their applications</li>
+                <li>Benefits received</li>
+            </ul>
+
+            <h6 class="text-primary mt-4 mb-3">Accessing Beneficiary Records (Admin Only)</h6>
+            <p>If you have admin access:</p>
+            <ol>
+                <li>Log in with your admin credentials</li>
+                <li>Navigate to <strong>"Beneficiaries"</strong> section</li>
+                <li>View, search, and manage beneficiary records</li>
+                <li>Track enrollment and benefit distribution</li>
+            </ol>
+
+            <h6 class="text-primary mt-4 mb-3">Beneficiary Status Meanings</h6>
+            <ul>
+                <li><strong>Pending:</strong> Application under review</li>
+                <li><strong>Approved:</strong> Application approved, eligible for benefits</li>
+                <li><strong>Active:</strong> Currently receiving benefits</li>
+                <li><strong>Completed:</strong> Scheme completed or benefits exhausted</li>
+                <li><strong>Rejected:</strong> Application rejected (check eligibility criteria)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Search Functionality -->
+    <div id="search" class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fas fa-search me-2"></i>Using the Search Feature</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">Quick Search</h6>
+            <p>The search feature on the home page allows you to quickly find information across the entire portal.</p>
+
+            <h6 class="text-primary mt-4 mb-3">How to Search</h6>
+            <ol>
+                <li>Find the <strong>Search Bar</strong> on the home page or use the search icon</li>
+                <li>Enter a keyword or phrase (e.g., "agriculture scheme", "health notice")</li>
+                <li>Click the <strong>Search Button</strong> or press Enter</li>
+                <li>Review the results from schemes, notices, and services</li>
+            </ol>
+
+            <h6 class="text-primary mt-4 mb-3">Search Tips</h6>
+            <ul>
+                <li><strong>Use keywords:</strong> Search for "agriculture", "health", "education", etc.</li>
+                <li><strong>Be specific:</strong> "Farmer pension scheme" gives better results than "scheme"</li>
+                <li><strong>Try variations:</strong> Search for both English and local language terms if applicable</li>
+                <li><strong>Use phrases:</strong> Search for complete phrases for more relevant results</li>
+                <li><strong>Filter results:</strong> Review results from different categories</li>
+            </ul>
+
+            <div class="alert alert-info mt-4">
+                <i class="fas fa-lightbulb me-2"></i><strong>Pro Tip:</strong> If you don't find what you're looking
+                for, try different keywords or browse the complete sections.
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Management -->
+    <div id="account" class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-user-cog me-2"></i>Account Management</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">User Accounts</h6>
+            <p>The portal offers two types of access levels:</p>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="text-success"><i class="fas fa-globe me-2"></i>Public User</h6>
+                            <p class="mb-0">
+                                <strong>Access:</strong><br>
+                                • View schemes<br>
+                                • Read notices<br>
+                                • Find services<br>
+                                • Search portal content
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="text-danger"><i class="fas fa-lock me-2"></i>Administrator</h6>
+                            <p class="mb-0">
+                                <strong>Access:</strong><br>
+                                • Manage all content<br>
+                                • Add/edit schemes<br>
+                                • Publish notices<br>
+                                • Manage beneficiaries
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="text-primary mb-3">Admin Login</h6>
+            <ol>
+                <li>Click <strong>"Admin Login"</strong> in the top-right corner</li>
+                <li>Enter your email and password</li>
+                <li>Click <strong>"Sign In"</strong></li>
+                <li>Access the admin dashboard</li>
+            </ol>
+
+            <h6 class="text-primary mt-4 mb-3">After Logging Out</h6>
+            <p>Click the <strong>"Logout"</strong> button in the top-right corner to securely exit your admin account.
+            </p>
+
+            <div class="alert alert-warning mt-4">
+                <i class="fas fa-lock me-2"></i><strong>Security:</strong> Never share your admin credentials. Always
+                log out when using shared computers.
+            </div>
+        </div>
+    </div>
+
+    <!-- Administrator Guide -->
+    <div id="admin" class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Administrator Guide</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">Admin Dashboard Overview</h6>
+            <p>The admin dashboard provides tools to manage all portal content.</p>
+
+            <h6 class="text-primary mt-4 mb-3">Key Administrative Functions</h6>
+
+            <div class="accordion" id="adminAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#adminSchemes">
+                            <i class="fas fa-file-alt me-2 text-success"></i>Managing Schemes
+                        </button>
+                    </h2>
+                    <div id="adminSchemes" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>Add new government schemes with complete details</li>
+                                <li>Edit existing scheme information</li>
+                                <li>Delete outdated schemes</li>
+                                <li>Manage application links and resources</li>
+                                <li>Track scheme creation dates</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#adminNotices">
+                            <i class="fas fa-bullhorn me-2 text-danger"></i>Publishing Notices
+                        </button>
+                    </h2>
+                    <div id="adminNotices" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>Create and publish official notices</li>
+                                <li>Set publication and expiry dates</li>
+                                <li>Upload attachments and supporting documents</li>
+                                <li>Edit notice details as needed</li>
+                                <li>Archive or remove outdated notices</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#adminServices">
+                            <i class="fas fa-building me-2 text-info"></i>Managing Services
+                        </button>
+                    </h2>
+                    <div id="adminServices" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>Add local services and government offices</li>
+                                <li>Update contact information</li>
+                                <li>Manage in-charge officer details</li>
+                                <li>Organize services by category</li>
+                                <li>Maintain accurate addresses and phone numbers</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#adminBeneficiaries">
+                            <i class="fas fa-users me-2 text-warning"></i>Managing Beneficiaries
+                        </button>
+                    </h2>
+                    <div id="adminBeneficiaries" class="accordion-collapse collapse" data-bs-parent="#adminAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>Register new beneficiaries</li>
+                                <li>Update beneficiary information</li>
+                                <li>Assign schemes to beneficiaries</li>
+                                <li>Track beneficiary status (Pending, Approved, Active, etc.)</li>
+                                <li>Monitor benefit distribution</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="text-primary mt-4 mb-3">Best Practices for Administrators</h6>
+            <ul>
+                <li><strong>Keep information updated:</strong> Regularly review and update all content</li>
+                <li><strong>Check dates:</strong> Ensure notice dates and scheme deadlines are current</li>
+                <li><strong>Verify contacts:</strong> Confirm phone numbers and addresses are correct</li>
+                <li><strong>Use clear titles:</strong> Make scheme and notice titles descriptive and searchable</li>
+                <li><strong>Proofread content:</strong> Check for spelling and grammatical errors</li>
+                <li><strong>Backup data:</strong> Regularly ensure data is properly saved</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FAQ & Troubleshooting -->
+    <div id="faq" class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>FAQ & Troubleshooting</h5>
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary mb-3">Frequently Asked Questions</h6>
+
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Do I need to create an account to use the portal?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>No, you don't need an account to view schemes, notices, and services. These are publicly
+                                available. However, if you're an administrator, you'll need to log in to manage content.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq2">
+                            How often is the portal content updated?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>The portal is updated regularly to reflect the latest schemes, notices, and service
+                                information. Administrators update content as needed, and users are encouraged to check
+                                back frequently for updates.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq3">
+                            How can I apply for a scheme?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Each scheme has an "Apply Link" or contact information. Click the link provided in the
+                                scheme details, or visit the relevant government office mentioned in the scheme
+                                information. You can also contact the local services listed in the portal.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq4">
+                            What should I do if I find an error in the portal?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Please contact us immediately through the Contact page. Provide details about the error,
+                                including the section, what the error is, and how you found it. We appreciate your
+                                feedback!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq5">
+                            Can I download documents from the portal?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Yes! Some notices include attachments (PDFs, images, etc.) that you can download. Look
+                                for the download button on notices that have attachments.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq6">
+                            How is my personal information protected?
+                        </button>
+                    </h2>
+                    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>The portal uses secure authentication for admin accounts. Your login credentials are
+                                encrypted, and beneficiary information is stored securely. Never share your admin
+                                password with others.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq7">
+                            What if I forget my admin password?
+                        </button>
+                    </h2>
+                    <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Please contact the technical support team or the system administrator. They can help you
+                                reset your password or recover your account access.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq8">
+                            How do I search for a specific scheme?
+                        </button>
+                    </h2>
+                    <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Use the search bar on the home page to find schemes by name, keyword, or department. You
+                                can also browse the Schemes section and look through the list. Try different keywords if
+                                you don't find what you're looking for initially.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="text-primary mt-5 mb-3">Common Issues & Solutions</h6>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Issue</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Search not returning results</strong></td>
+                            <td>Try different keywords, check spelling, or browse the full section directly</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cannot download attachment</strong></td>
+                            <td>Check your internet connection and browser settings. Try a different browser if issues
+                                persist</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Login page won't load</strong></td>
+                            <td>Clear your browser cache and cookies, or try a different browser</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Page loading slowly</strong></td>
+                            <td>Check your internet connection speed, or try again during off-peak hours</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mobile view not displaying correctly</strong></td>
+                            <td>Use portrait orientation, or access the portal from a desktop for better experience</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cannot edit admin content</strong></td>
+                            <td>Verify your admin login status. Some features may require specific admin permissions
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact for Support -->
+    <div class="card bg-light border-primary mt-5">
+        <div class="card-body text-center">
+            <h5 class="text-primary mb-3">
+                <i class="fas fa-headset me-2"></i>Need More Help?
+            </h5>
+            <p class="mb-3">If you have questions not covered in this guide, please reach out to us.</p>
+            <a href="/contact" class="btn btn-primary btn-lg">
+                <i class="fas fa-phone me-2"></i>Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<div class="mt-5 mb-5 text-center">
+    <a href="#getting-started" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-up me-2"></i>Back to Top
+    </a>
+</div>
+
+<style>
+    /* Navbar link glow effect */
+    .nav-link.glow-active {
+        color: #fff !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+        animation: textGlow 2s infinite;
+    }
+
+    @keyframes textGlow {
+
+        0%,
+        100% {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        50% {
+            text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+    }
+</style>
+
+{% endblock %}

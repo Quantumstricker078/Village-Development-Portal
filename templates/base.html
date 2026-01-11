@@ -47,6 +47,38 @@
             border-radius: 10px;
             border: none;
         }
+
+        .search-result-item {
+            padding: 10px;
+            margin-left: -10px;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navbar link glow effect */
+        .nav-link.glow-active {
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+            animation: textGlow 2s infinite;
+        }
+
+        @keyframes textGlow {
+
+            0%,
+            100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+            }
+
+            50% {
+                text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
     </style>
 </head>
 
@@ -75,6 +107,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/contact">
                             <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/documentation">
+                            <i class="fas fa-book"></i> Guides
                         </a>
                     </li>
                     <li class="nav-item">
@@ -182,22 +219,52 @@
                 const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
                 const data = await response.json();
 
-                let html = '<h6><i class="fas fa-search me-2"></i>Search Results:</h6>';
+                let html = '<h6 class="mb-3"><i class="fas fa-search me-2"></i>Search Results:</h6>';
+                let hasResults = false;
 
+                // Display Schemes
                 if (data.results.schemes.length > 0) {
-                    html += '<p><strong>📋 Schemes:</strong> ' +
-                        data.results.schemes.map(s => s.title).join(', ') + '</p>';
-                }
-                if (data.results.notices.length > 0) {
-                    html += '<p><strong>📢 Notices:</strong> ' +
-                        data.results.notices.map(n => n.title).join(', ') + '</p>';
-                }
-                if (data.results.services.length > 0) {
-                    html += '<p><strong>🏛️ Services:</strong> ' +
-                        data.results.services.map(s => s.name).join(', ') + '</p>';
+                    hasResults = true;
+                    html += '<div class="mb-4">';
+                    html += '<p class="fw-bold mb-2"><i class="fas fa-clipboard-list me-2"></i>Schemes:</p>';
+                    data.results.schemes.forEach(scheme => {
+                        html += '<div class="ps-3 mb-2 border-start border-primary search-result-item" style="cursor: pointer;" onclick="window.location.href=\'/schemes\';">';
+                        html += '<p class="mb-1 text-dark">' + scheme.title + '</p>';
+                        html += '<small class="text-muted">' + (scheme.department || 'N/A') + '</small>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
                 }
 
-                if (html === '<h6><i class="fas fa-search me-2"></i>Search Results:</h6>') {
+                // Display Notices
+                if (data.results.notices.length > 0) {
+                    hasResults = true;
+                    html += '<div class="mb-4">';
+                    html += '<p class="fw-bold mb-2"><i class="fas fa-bell me-2"></i>Notices:</p>';
+                    data.results.notices.forEach(notice => {
+                        html += '<div class="ps-3 mb-2 border-start border-warning search-result-item" style="cursor: pointer;" onclick="window.location.href=\'/notices\';">';
+                        html += '<p class="mb-1 text-dark">' + notice.title + '</p>';
+                        html += '<small class="text-muted">' + new Date(notice.publish_date).toLocaleDateString() + '</small>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                // Display Services
+                if (data.results.services.length > 0) {
+                    hasResults = true;
+                    html += '<div class="mb-4">';
+                    html += '<p class="fw-bold mb-2"><i class="fas fa-building me-2"></i>Services:</p>';
+                    data.results.services.forEach(service => {
+                        html += '<div class="ps-3 mb-2 border-start border-success search-result-item" style="cursor: pointer;" onclick="window.location.href=\'/services\';">';
+                        html += '<p class="mb-1 text-dark">' + service.name + '</p>';
+                        html += '<small class="text-muted">' + (service.category || 'N/A') + '</small>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                if (!hasResults) {
                     html += '<p class="text-muted">No results found for "' + query + '"</p>';
                 }
 
@@ -282,6 +349,36 @@
                 });
             }
         });
+
+        // Navbar highlighting functionality
+        function highlightCurrentNav() {
+            const currentPath = window.location.pathname;
+
+            // Remove glow from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('glow-active');
+            });
+
+            // Find and highlight the current page link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                // Exact match for the current path
+                if (href === currentPath) {
+                    link.classList.add('glow-active');
+                }
+                // Also highlight if we're on a subpage (e.g., /documentation with anchors)
+                else if (currentPath.startsWith(href) && href !== '/') {
+                    link.classList.add('glow-active');
+                }
+            });
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', highlightCurrentNav);
+
+        // Also update if hash changes (for anchor links)
+        window.addEventListener('hashchange', highlightCurrentNav);
     </script>
 </body>
 

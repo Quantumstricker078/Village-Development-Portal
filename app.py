@@ -174,6 +174,7 @@ def load_user(user_id):
 
 # Routes
 @app.route('/')
+@login_required
 def index():
     conn = get_db()
     cursor = conn.cursor()
@@ -211,6 +212,10 @@ def contact():
 @app.route('/acknowledgements')
 def acknowledgements():
     return render_template('acknowledgements.html')
+
+@app.route('/documentation')
+def documentation():
+    return render_template('documentation.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
