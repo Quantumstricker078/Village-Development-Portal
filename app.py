@@ -233,7 +233,17 @@ def login():
             user_obj = User(user['id'], user['name'], user['email'], user['role'])
             login_user(user_obj)
             flash('Login successful!', 'success')
-            return redirect(url_for('admin_dashboard'))
+
+            # Respect the 'next' parameter when present (and simple safety check)
+            next_page = request.args.get('next')
+            if next_page and not next_page.startswith('/'):
+                next_page = None
+
+            # Redirect admin users to admin dashboard, others to index (or next)
+            if user_obj.role == 'admin':
+                return redirect(next_page or url_for('admin_dashboard'))
+            else:
+                return redirect(next_page or url_for('index'))
         else:
             flash('Invalid email or password', 'error')
     
@@ -301,6 +311,11 @@ def logout():
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
+    # Check if user is admin
+    if current_user.role != 'admin':
+        flash('You do not have permission to access the admin dashboard', 'error')
+        return redirect(url_for('index'))
+    
     conn = get_db()
     cursor = conn.cursor()
     
