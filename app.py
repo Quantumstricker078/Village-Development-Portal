@@ -9,8 +9,10 @@ app = Flask(__name__)
 app.secret_key = 'village_portal_secret_key_2024'
 
 # Database setup
-def init_db():
-    conn = sqlite3.connect('database.db')
+def init_db(db_path=None):
+    if db_path is None:
+        db_path = app.config.get('DATABASE', 'database.db')
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
     # Create users table
@@ -141,7 +143,8 @@ def init_db():
     conn.close()
 
 def get_db():
-    conn = sqlite3.connect('database.db')
+    db_path = app.config.get('DATABASE', 'database.db')
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -316,43 +319,51 @@ def admin_dashboard():
         flash('You do not have permission to access the admin dashboard', 'error')
         return redirect(url_for('index'))
     
-    conn = get_db()
-    cursor = conn.cursor()
-    
-    # Get counts for admin dashboard
-    cursor.execute('SELECT COUNT(*) as count FROM schemes')
-    schemes_count = cursor.fetchone()['count']
-    
-    cursor.execute('SELECT COUNT(*) as count FROM beneficiaries')
-    beneficiaries_count = cursor.fetchone()['count']
-    
-    cursor.execute('SELECT COUNT(*) as count FROM notices')
-    notices_count = cursor.fetchone()['count']
-    
-    cursor.execute('SELECT COUNT(*) as count FROM services')
-    services_count = cursor.fetchone()['count']
-    
-    # Get recent beneficiaries
-    cursor.execute('''
-        SELECT b.*, s.title as scheme_name 
-        FROM beneficiaries b 
-        LEFT JOIN schemes s ON b.scheme_id = s.id 
-        ORDER BY b.registered_on DESC LIMIT 5
-    ''')
-    recent_beneficiaries = cursor.fetchall()
-    
-    cursor.execute('SELECT id, title FROM schemes')
-    schemes = cursor.fetchall()
-    
-    conn.close()
-    
-    return render_template('admin_dashboard.html',
-                         schemes_count=schemes_count,
-                         beneficiaries_count=beneficiaries_count,
-                         notices_count=notices_count,
-                         services_count=services_count,
-                         recent_beneficiaries=recent_beneficiaries,
-                         schemes=schemes)
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        
+        # Get counts for admin dashboard
+        cursor.execute('SELECT COUNT(*) as count FROM schemes')
+        schemes_count_result = cursor.fetchone()
+        schemes_count = schemes_count_result['count'] if schemes_count_result else 0
+        
+        cursor.execute('SELECT COUNT(*) as count FROM beneficiaries')
+        beneficiaries_count_result = cursor.fetchone()
+        beneficiaries_count = beneficiaries_count_result['count'] if beneficiaries_count_result else 0
+        
+        cursor.execute('SELECT COUNT(*) as count FROM notices')
+        notices_count_result = cursor.fetchone()
+        notices_count = notices_count_result['count'] if notices_count_result else 0
+        
+        cursor.execute('SELECT COUNT(*) as count FROM services')
+        services_count_result = cursor.fetchone()
+        services_count = services_count_result['count'] if services_count_result else 0
+        
+        # Get recent beneficiaries
+        cursor.execute('''
+            SELECT b.*, s.title as scheme_name 
+            FROM beneficiaries b 
+            LEFT JOIN schemes s ON b.scheme_id = s.id 
+            ORDER BY b.registered_on DESC LIMIT 5
+        ''')
+        recent_beneficiaries = cursor.fetchall()
+        
+        cursor.execute('SELECT id, title FROM schemes')
+        schemes = cursor.fetchall()
+        
+        conn.close()
+        
+        return render_template('admin_dashboard.html',
+                             schemes_count=schemes_count,
+                             beneficiaries_count=beneficiaries_count,
+                             notices_count=notices_count,
+                             services_count=services_count,
+                             recent_beneficiaries=recent_beneficiaries,
+                             schemes=schemes)
+    except Exception as e:
+        flash(f'Error loading dashboard: {str(e)}', 'error')
+        return redirect(url_for('index'))
 
 @app.route('/notices')
 def notices():
@@ -486,6 +497,31 @@ def add_beneficiary():
         conn.close()
         
         return jsonify({'success': True, 'message': 'Beneficiary added successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
+@app.route('/api/submit_feedback', methods=['POST'])
+def submit_feedback():
+    try:
+        name = request.form.get('name', '')
+        contact = request.form.get('contact', '')
+        message = request.form.get('message', '')
+        
+        if not name or not message:
+            return jsonify({'success': False, 'message': 'Name and message are required'})
+        
+        conn = get_db()
+        cursor = conn.cursor()
+        
+        cursor.execute(
+            'INSERT INTO feedback (name, contact, message) VALUES (?, ?, ?)',
+            (name, contact, message)
+        )
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'Feedback submitted successfully'})
     except Exception as e:
         return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
