@@ -73,159 +73,6 @@
                 text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8);
             }
         }
-
-        /* Google Translate Seamless Integration */
-        .goog-te-banner-frame.skiptranslate,
-        .goog-te-banner-frame {
-            display: none !important;
-        }
-
-        body,
-        html {
-            top: 0px !important;
-            margin-top: 0px !important;
-            padding-top: 0px !important;
-        }
-
-        /* Hide Google Translate hover tooltips */
-        #goog-gt-tt,
-        .goog-te-balloon-frame {
-            display: none !important;
-        }
-
-        .goog-text-highlight {
-            background: transparent !important;
-            box-shadow: none !important;
-        }
-
-        #google_translate_element {
-            display: block !important;
-            visibility: hidden !important;
-            position: absolute !important;
-            height: 0 !important;
-            width: 0 !important;
-            overflow: hidden !important;
-            pointer-events: none !important;
-        }
-
-        .goog-te-gadget {
-            color: transparent !important;
-            font-size: 0px !important;
-            display: block !important;
-            visibility: hidden !important;
-            position: absolute !important;
-            height: 0 !important;
-            width: 0 !important;
-            overflow: hidden !important;
-            pointer-events: none !important;
-        }
-
-        /* Language Switcher Button */
-        .language-switcher-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .language-switcher-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .language-switcher-btn i {
-            font-size: 1.1rem;
-        }
-
-        /* Language Dropdown Menu */
-        .language-dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-            z-index: 1050;
-            min-width: 180px;
-            margin-top: 8px;
-            animation: slideDown 0.3s ease;
-        }
-
-        .language-dropdown-menu.show {
-            display: block;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .language-option {
-            display: block;
-            padding: 12px 16px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .language-option:last-child {
-            border-bottom: none;
-        }
-
-        .language-option:hover {
-            background-color: #f5f5f5;
-            color: #0d6efd;
-            padding-left: 20px;
-        }
-
-        .language-option.active {
-            background-color: #e7f1ff;
-            color: #0d6efd;
-            font-weight: 600;
-        }
-
-        .language-option.active::before {
-            content: '✓ ';
-            margin-right: 6px;
-            font-weight: bold;
-        }
-
-        .language-switcher-container {
-            position: relative;
-        }
-
-        /* Hide Google logo and 'Powered by' text */
-        .goog-logo-link,
-        .goog-te-gadget span {
-            display: none !important;
-        }
     </style>
 </head>
 
@@ -298,64 +145,37 @@
                         </a>
                     </li>
                     {% endif %}
-                    {% if current_user.is_authenticated and current_user.role != 'admin' %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/dashboard">
-                            <i class="fas fa-tachometer-alt"></i> My Dashboard
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/settings">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                    </li>
-                    {% endif %}
                 </ul>
                 <ul class="navbar-nav">
-                    <!-- Custom Language Switcher -->
-                    <li class="nav-item d-flex align-items-center me-3">
-                        <div class="language-switcher-container">
-                            <button class="language-switcher-btn" id="languageSwitcherBtn"
-                                onclick="toggleLanguageDropdown(event)">
-                                <i class="fas fa-globe"></i>
-                                <span id="currentLanguageDisplay">English</span>
-                                <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
-                            </button>
-                            <div class="language-dropdown-menu" id="languageDropdown">
-                                <a class="language-option active" onclick="changeLanguage('en', 'English', event)">
-                                    <i class="fas fa-check-circle"
-                                        style="margin-right: 6px; font-size: 0.9rem;"></i>English
-                                </a>
-                                <a class="language-option" onclick="changeLanguage('hi', 'हिंदी', event)">
-                                    <i class="fas fa-check-circle"
-                                        style="margin-right: 6px; font-size: 0.9rem; visibility: hidden;"></i>हिंदी
-                                </a>
-                                <a class="language-option" onclick="changeLanguage('mr', 'मराठी', event)">
-                                    <i class="fas fa-check-circle"
-                                        style="margin-right: 6px; font-size: 0.9rem; visibility: hidden;"></i>मराठी
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- Hidden Google Translate Element -->
-                    <div id="google_translate_element" style="display: none;"></div>
                     {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <span class="navbar-text me-3">
-                            <i class="fas fa-user"></i> Welcome, {{ current_user.name }}
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i> Welcome, {{ current_user.name }}
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            {% if current_user.role != 'admin' %}
+                            <li><a class="dropdown-item" href="/user/dashboard"><i
+                                        class="fas fa-tachometer-alt me-2"></i> My Dashboard</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-2"></i> Settings</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="/logout"><i
+                                        class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
                     </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="/login">
-                            <i class="fas fa-sign-in-alt"></i> Admin Login
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">
+                            <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
                     {% endif %}
@@ -395,82 +215,6 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Google Translate Script -->
-    <script type="text/javascript">
-        // Toggle language dropdown
-        function toggleLanguageDropdown(event) {
-            event.preventDefault();
-            document.getElementById('languageDropdown').classList.toggle('show');
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const dropdown = document.getElementById('languageDropdown');
-            if (dropdown && !event.target.closest('.language-switcher-container')) {
-                dropdown.classList.remove('show');
-            }
-        });
-
-        // Reliable cookie-based language switching
-        function changeLanguage(languageCode, languageName, event) {
-            if (event) event.preventDefault();
-
-            // 1. Store the UI preference
-            localStorage.setItem('selectedLanguage', languageCode);
-
-            // 2. Set the Google Translate cookie directly
-            if (languageCode === 'en') {
-                // Clear cookies to return to English
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=." + document.domain + "; path=/;";
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + document.domain + "; path=/;";
-            } else {
-                // Set cookies for translation
-                const cookieString = "googtrans=/en/" + languageCode;
-                document.cookie = cookieString + "; path=/;";
-                document.cookie = cookieString + "; domain=." + document.domain + "; path=/;";
-                document.cookie = cookieString + "; domain=" + document.domain + "; path=/;";
-            }
-
-            // 3. Reload page to apply translation natively
-            window.location.reload();
-        }
-
-        // Initialize UI correctly based on stored preference
-        document.addEventListener('DOMContentLoaded', function () {
-            const storedLanguage = localStorage.getItem('selectedLanguage') || 'en';
-            const languageNames = {
-                'en': 'English',
-                'hi': 'हिंदी',
-                'mr': 'मराठी'
-            };
-
-            const currentDisplay = document.getElementById('currentLanguageDisplay');
-            if (currentDisplay && languageNames[storedLanguage]) {
-                currentDisplay.textContent = languageNames[storedLanguage];
-            }
-
-            document.querySelectorAll('.language-option').forEach(option => {
-                if (option.textContent.includes(languageNames[storedLanguage])) {
-                    option.classList.add('active');
-                } else {
-                    option.classList.remove('active');
-                }
-            });
-        });
-
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: 'en,hi,mr',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
 

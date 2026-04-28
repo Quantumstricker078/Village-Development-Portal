@@ -289,7 +289,6 @@ def load_user(user_id):
 
 # Routes
 @app.route('/')
-@login_required
 def index():
     conn = get_db()
     cursor = conn.cursor()
@@ -1473,8 +1472,8 @@ def add_beneficiary():
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO beneficiaries (name, age, gender, scheme_id, mobile) VALUES (?, ?, ?, ?, ?)',
-            (name, age, gender, scheme_id, mobile)
+            'INSERT INTO beneficiaries (user_id, name, age, gender, scheme_id, mobile, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            (current_user.id, name, age, gender, scheme_id, mobile, 'Pending')
         )
         conn.commit()
         conn.close()
