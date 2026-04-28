@@ -13,7 +13,7 @@
                 <p><strong>Name:</strong> {{ user.name }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
                 <p><strong>Role:</strong> {{ user.role }}</p>
-                <p><strong>Member Since:</strong> {{ user.created_at[:10] }}</p>
+                <p><strong>Member Since:</strong> {{ user.created_at[:10] if user.created_at else 'N/A' }}</p>
             </div>
         </div>
     </div>
@@ -49,18 +49,24 @@
                     {% if total == 0 %}
                     <div class="progress-bar bg-secondary w-100">No requests yet</div>
                     {% else %}
-                    <div class="progress-bar bg-warning" role="progressbar"
-                        style="width: {{ (status_counts.Pending / total * 100) | round(0) }}%">
-                        Pending {{ (status_counts.Pending / total * 100) | round(0) }}%
+                    {% if status_counts.Pending > 0 %}
+                    <div class="progress-bar bg-warning text-dark" role="progressbar"
+                        style="width: {{ (status_counts.Pending / total * 100) | int }}%">
+                        Pending {{ (status_counts.Pending / total * 100) | int }}%
                     </div>
+                    {% endif %}
+                    {% if status_counts.Approved > 0 %}
                     <div class="progress-bar bg-success" role="progressbar"
-                        style="width: {{ (status_counts.Approved / total * 100) | round(0) }}%">
-                        Approved {{ (status_counts.Approved / total * 100) | round(0) }}%
+                        style="width: {{ (status_counts.Approved / total * 100) | int }}%">
+                        Approved {{ (status_counts.Approved / total * 100) | int }}%
                     </div>
+                    {% endif %}
+                    {% if status_counts.Rejected > 0 %}
                     <div class="progress-bar bg-danger" role="progressbar"
-                        style="width: {{ (status_counts.Rejected / total * 100) | round(0) }}%">
-                        Rejected {{ (status_counts.Rejected / total * 100) | round(0) }}%
+                        style="width: {{ (status_counts.Rejected / total * 100) | int }}%">
+                        Rejected {{ (status_counts.Rejected / total * 100) | int }}%
                     </div>
+                    {% endif %}
                     {% endif %}
                 </div>
 
@@ -145,7 +151,7 @@
                             </span>
                         </td>
                         <td>{{ item.mobile or 'N/A' }}</td>
-                        <td>{{ item.registered_on[:10] }}</td>
+                        <td>{{ item.registered_on[:10] if item.registered_on else 'N/A' }}</td>
                         <td>
                             {% if item.scheme_id %}
                             <a href="{{ url_for('request_scheme', scheme_id=item.scheme_id) }}"
