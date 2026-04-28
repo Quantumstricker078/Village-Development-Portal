@@ -1,59 +1,114 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="mb-4"><i class="fas fa-bullhorn me-2"></i>Village Notices & Announcements</h2>
-
-{% if notices %}
-{% for notice in notices %}
-<div class="card mb-4 shadow-sm position-relative">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
-            <div class="flex-grow-1">
-                <h5 class="card-title text-primary mb-2">
-                    <i class="fas fa-bullhorn me-2"></i>
-                    {{ notice.title }}
-                </h5>
-                <p class="card-text text-muted mb-3">{{ notice.description }}</p>
-
-                {% if notice.scheme_id %}
-                <div class="mb-3">
-                    <a href="{{ url_for('scheme_detail', scheme_id=notice.scheme_id) }}"
-                        class="btn btn-sm btn-success text-white">
-                        <i class="fas fa-arrow-right me-1"></i>View Related Scheme & Apply
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-            <span class="badge bg-info ms-3">{{ notice.publish_date[:10] }}</span>
-        </div>
-
-        <hr class="my-3">
-
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <small class="text-muted">
-                    <i class="fas fa-calendar me-1"></i>
-                    <strong>Valid Until:</strong> {{ notice.valid_until or 'Ongoing' }}
-                </small>
-            </div>
-            <div class="d-flex gap-2">
-                <a href="{{ url_for('notice_detail', notice_id=notice.id) }}" class="btn btn-sm btn-outline-primary">
-                    <i class="fas fa-info-circle me-1"></i>Details
-                </a>
-                {% if notice.attachment_url %}
-                <a href="{{ notice.attachment_url }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-download me-1"></i>Download
-                </a>
-                {% endif %}
-            </div>
-        </div>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="mb-4">
+        <h2 class="mb-2"><i class="fas fa-bullhorn me-2"></i>Village Notices & Announcements</h2>
+        <p class="text-muted">Stay updated with the latest announcements, news, and important notices from your village
+        </p>
     </div>
+
+    {% if notices %}
+    <div class="row">
+        {% for notice in notices %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <!-- Clickable Notice Card -->
+            <div class="card border-0 shadow-sm h-100 cursor-pointer notice-card transition-hover"
+                onclick="window.location.href='{{ url_for('notice_detail', notice_id=notice.id) }}';"
+                style="cursor: pointer; transition: all 0.3s ease;">
+
+                <div class="card-body d-flex flex-column">
+                    <!-- Date Badge -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-info">
+                            <i class="fas fa-calendar-alt me-1"></i>{{ notice.publish_date[:10] }}
+                        </span>
+                        <span class="badge bg-success">
+                            <i class="fas fa-bell me-1"></i>Notice
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h5 class="card-title mb-3">
+                        <i class="fas fa-newspaper me-2"></i>{{ notice.title }}
+                    </h5>
+
+                    <!-- Description -->
+                    <p class="card-text text-muted small mb-3 flex-grow-1">
+                        {{ notice.description[:120] }}{% if notice.description|length > 120 %}...{% endif %}
+                    </p>
+
+                    <!-- Valid Until Info -->
+                    <div class="mb-3 p-2 bg-light rounded">
+                        <small>
+                            <strong><i class="fas fa-hourglass-end me-1"></i>Valid Until:</strong><br>
+                            {{ notice.valid_until or 'Ongoing' }}
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Card Footer with Actions -->
+                <div class="card-footer bg-white border-top">
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('notice_detail', notice_id=notice.id) }}"
+                            class="btn btn-sm btn-primary flex-grow-1" onclick="event.stopPropagation();">
+                            <i class="fas fa-arrow-right me-1"></i>Read Full
+                        </a>
+                        {% if notice.attachment_url %}
+                        <a href="{{ notice.attachment_url }}" target="_blank" class="btn btn-sm btn-outline-secondary"
+                            onclick="event.stopPropagation();">
+                            <i class="fas fa-download me-1"></i>File
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info border-0 shadow-sm text-center py-5">
+        <div class="mb-3">
+            <i class="fas fa-megaphone fa-3x text-info opacity-50"></i>
+        </div>
+        <h5 class="alert-heading">No Notices Available</h5>
+        <p class="mb-0">Check back later for new announcements and important information from your village
+            administration.</p>
+    </div>
+    {% endif %}
 </div>
-{% endfor %}
-{% else %}
-<div class="alert alert-info text-center">
-    <h5><i class="fas fa-info-circle me-2"></i>No notices available</h5>
-    <p class="mb-0">Check back later for new announcements.</p>
-</div>
-{% endif %}
+
+<style>
+    .notice-card {
+        cursor: pointer;
+        position: relative;
+    }
+
+    .notice-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .notice-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .notice-card:hover::before {
+        opacity: 1;
+    }
+
+    .transition-hover {
+        transition: all 0.3s ease;
+    }
+</style>
 {% endblock %}

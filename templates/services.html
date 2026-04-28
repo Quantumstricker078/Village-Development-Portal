@@ -3,27 +3,51 @@
 {% block content %}
 <h2 class="mb-4"><i class="fas fa-building me-2"></i>Local Services Directory</h2>
 
+<!-- Filter Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" action="{{ url_for('services') }}" class="row g-3 align-items-end">
+            <input type="hidden" name="category" value="{{ selected_category }}">
+            <div class="col-md-9">
+                <label for="location" class="form-label">Location (Village / City)</label>
+                <select class="form-select" id="location" name="location">
+                    <option value="" {% if not selected_location %}selected{% endif %}>All Locations</option>
+                    {% for loc in locations %}
+                    <option value="{{ loc }}" {% if selected_location==loc %}selected{% endif %}>{{ loc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 text-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-1"></i> Filter Location
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Category Filter -->
 <div class="card mb-4">
     <div class="card-body">
         <h5 class="card-title">Filter by Category</h5>
         <div class="btn-group flex-wrap" role="group">
-            <a href="/services" class="btn btn-outline-primary {{ 'active' if not selected_category }}">
+            <a href="{{ url_for('services', location=selected_location) }}"
+                class="btn btn-outline-primary {{ 'active' if not selected_category }}">
                 <i class="fas fa-home me-2"></i>All Services
             </a>
-            <a href="/services?category=Health"
+            <a href="{{ url_for('services', category='Health', location=selected_location) }}"
                 class="btn btn-outline-primary {{ 'active' if selected_category == 'Health' }}">
                 <i class="fas fa-hospital me-2"></i>Health
             </a>
-            <a href="/services?category=Education"
+            <a href="{{ url_for('services', category='Education', location=selected_location) }}"
                 class="btn btn-outline-primary {{ 'active' if selected_category == 'Education' }}">
                 <i class="fas fa-school me-2"></i>Education
             </a>
-            <a href="/services?category=Police"
+            <a href="{{ url_for('services', category='Police', location=selected_location) }}"
                 class="btn btn-outline-primary {{ 'active' if selected_category == 'Police' }}">
                 <i class="fas fa-shield-alt me-2"></i>Police
             </a>
-            <a href="/services?category=Bank"
+            <a href="{{ url_for('services', category='Bank', location=selected_location) }}"
                 class="btn btn-outline-primary {{ 'active' if selected_category == 'Bank' }}">
                 <i class="fas fa-university me-2"></i>Bank
             </a>

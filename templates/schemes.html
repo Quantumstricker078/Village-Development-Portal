@@ -1,180 +1,189 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="mb-4"><i class="fas fa-file-alt me-2"></i>Government Schemes</h2>
-
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="get" action="{{ url_for('schemes') }}" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label for="q" class="form-label">Search schemes</label>
-                <input type="text" class="form-control" id="q" name="q" value="{{ search_query }}"
-                    placeholder="Search title, benefits, eligibility">
-            </div>
-            <div class="col-md-3">
-                <label for="sort" class="form-label">Sort by</label>
-                <select class="form-select" id="sort" name="sort">
-                    <option value="latest" {% if selected_sort=='latest' %}selected{% endif %}>Latest</option>
-                    <option value="relevance" {% if selected_sort=='relevance' %}selected{% endif %}>Relevance</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="category" class="form-label">Department</label>
-                <select class="form-select" id="category" name="category">
-                    <option value="" {% if not selected_category %}selected{% endif %}>All Departments</option>
-                    <option value="Agriculture" {% if selected_category=='Agriculture' %}selected{% endif %}>Agriculture
-                    </option>
-                    <option value="Education" {% if selected_category=='Education' %}selected{% endif %}>Education
-                    </option>
-                    <option value="Health" {% if selected_category=='Health' %}selected{% endif %}>Health</option>
-                    <option value="Social Welfare" {% if selected_category=='Social Welfare' %}selected{% endif %}>
-                        Social Welfare</option>
-                </select>
-            </div>
-            <div class="col-md-2 text-end">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-filter me-1"></i> Filter
-                </button>
-            </div>
-        </form>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="mb-4">
+        <h2 class="mb-2"><i class="fas fa-file-alt me-2"></i>Government Schemes</h2>
+        <p class="text-muted">Explore and apply for government schemes and benefits available in your area</p>
     </div>
-</div>
 
-<!-- Category Filter -->
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Filter by Category</h5>
-        <div class="btn-group flex-wrap" role="group">
-            <a href="/schemes" class="btn btn-outline-primary {{ 'active' if not selected_category }}">
-                <i class="fas fa-star me-2"></i>All Schemes
-            </a>
-            <a href="/schemes?category=Agriculture"
-                class="btn btn-outline-primary {{ 'active' if selected_category == 'Agriculture' }}">
-                <i class="fas fa-tractor me-2"></i>Agriculture
-            </a>
-            <a href="/schemes?category=Education"
-                class="btn btn-outline-primary {{ 'active' if selected_category == 'Education' }}">
-                <i class="fas fa-graduation-cap me-2"></i>Education
-            </a>
-            <a href="/schemes?category=Health"
-                class="btn btn-outline-primary {{ 'active' if selected_category == 'Health' }}">
-                <i class="fas fa-hospital me-2"></i>Health
-            </a>
-            <a href="/schemes?category=Social Welfare"
-                class="btn btn-outline-primary {{ 'active' if selected_category == 'Social Welfare' }}">
-                <i class="fas fa-hands-helping me-2"></i>Social Welfare
-            </a>
-        </div>
-    </div>
-</div>
+    <!-- Search and Filter Section -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+            <form method="get" action="{{ url_for('schemes') }}" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="q" class="form-label fw-500">
+                        <i class="fas fa-search me-2"></i>Search Schemes
+                    </label>
+                    <input type="text" class="form-control" id="q" name="q" value="{{ search_query }}"
+                        placeholder="Search by title, benefits...">
+                </div>
 
-<!-- Dummy Application / Policy Request Form -->
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Submit a Scheme / Policy Request</h5>
-        <p class="card-text">Select a scheme or other policy, add your details, and submit a dummy request for review.
-        </p>
-        <form method="post" action="/schemes/submit">
-            <input type="hidden" name="category" value="{{ selected_category }}">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label for="full_name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="full_name" name="full_name"
-                        placeholder="Enter your name" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
-                </div>
-                <div class="col-md-4">
-                    <label for="selected_scheme" class="form-label">Choose Scheme / Policy</label>
-                    <select class="form-select" id="selected_scheme" name="selected_scheme" required>
-                        <option value="" disabled {{ 'selected' if not selected_scheme_default }}>Select a scheme or
-                            policy</option>
-                        {% for scheme in schemes %}
-                        <option value="{{ scheme.title }}" {% if selected_scheme_default==scheme.title %}selected{%
-                            endif %}>{{ scheme.title }} ({{ scheme.department }})</option>
-                        {% endfor %}
-                        <option value="Employment Support Policy" {% if
-                            selected_scheme_default=='Employment Support Policy' %}selected{% endif %}>Employment
-                            Support Policy</option>
-                        <option value="Community Welfare Policy" {% if
-                            selected_scheme_default=='Community Welfare Policy' %}selected{% endif %}>Community Welfare
-                            Policy</option>
-                        <option value="Agriculture Subsidy Policy" {% if
-                            selected_scheme_default=='Agriculture Subsidy Policy' %}selected{% endif %}>Agriculture
-                            Subsidy Policy</option>
+                <div class="col-md-3">
+                    <label for="category" class="form-label fw-500">
+                        <i class="fas fa-list me-2"></i>Department
+                    </label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">All Departments</option>
+                        <option value="Agriculture" {% if selected_category=='Agriculture' %}selected{% endif %}>
+                            Agriculture</option>
+                        <option value="Education" {% if selected_category=='Education' %}selected{% endif %}>
+                            Education</option>
+                        <option value="Health" {% if selected_category=='Health' %}selected{% endif %}>
+                            Health</option>
+                        <option value="Social Welfare" {% if selected_category=='Social Welfare' %}selected{% endif %}>
+                            Social Welfare</option>
                     </select>
                 </div>
-                <div class="col-12">
-                    <label for="comments" class="form-label">Comments / Requirement</label>
-                    <textarea class="form-control" id="comments" name="comments" rows="2"
-                        placeholder="Describe your request or policy interest"></textarea>
+
+                <div class="col-md-3">
+                    <label for="location" class="form-label fw-500">
+                        <i class="fas fa-map-marker-alt me-2"></i>Location
+                    </label>
+                    <select class="form-select" id="location" name="location">
+                        <option value="">All Locations</option>
+                        {% for loc in locations %}
+                        <option value="{{ loc }}" {% if selected_location==loc %}selected{% endif %}>{{ loc }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane me-2"></i>Submit Request
+
+                <div class="col-md-2">
+                    <label for="sort" class="form-label fw-500">
+                        <i class="fas fa-sort me-2"></i>Sort
+                    </label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="latest" {% if selected_sort=='latest' %}selected{% endif %}>Latest</option>
+                        <option value="relevance" {% if selected_sort=='relevance' %}selected{% endif %}>Relevance
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-auto">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Apply Filters
                     </button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Schemes List -->
-<div class="row">
-    {% if schemes %}
-    {% for scheme in schemes %}
-    <div class="col-md-6 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div
-                class="card-header bg-{{ 'success' if scheme.department == 'Agriculture' else 'info' if scheme.department == 'Education' else 'warning' if scheme.department == 'Health' else 'secondary' }} text-white">
-                <h6 class="mb-0">{{ scheme.department }}</h6>
+    <!-- Category Quick Filter -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+            <h6 class="card-title mb-3">
+                <i class="fas fa-layer-group me-2"></i>Quick Filter by Category
+            </h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('schemes') }}"
+                    class="btn btn-sm {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <i class="fas fa-star me-2"></i>All Schemes
+                </a>
+                <a href="{{ url_for('schemes', category='Agriculture', location=selected_location, sort=selected_sort, q=search_query) }}"
+                    class="btn btn-sm {% if selected_category == 'Agriculture' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <i class="fas fa-leaf me-2"></i>Agriculture
+                </a>
+                <a href="{{ url_for('schemes', category='Education', location=selected_location, sort=selected_sort, q=search_query) }}"
+                    class="btn btn-sm {% if selected_category == 'Education' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <i class="fas fa-book me-2"></i>Education
+                </a>
+                <a href="{{ url_for('schemes', category='Health', location=selected_location, sort=selected_sort, q=search_query) }}"
+                    class="btn btn-sm {% if selected_category == 'Health' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <i class="fas fa-heartbeat me-2"></i>Health
+                </a>
+                <a href="{{ url_for('schemes', category='Social Welfare', location=selected_location, sort=selected_sort, q=search_query) }}"
+                    class="btn btn-sm {% if selected_category == 'Social Welfare' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <i class="fas fa-hands-helping me-2"></i>Social Welfare
+                </a>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">{{ scheme.title }}</h5>
-                <p class="card-text">{{ scheme.description }}</p>
+        </div>
+    </div>
 
-                <div class="mb-2">
-                    <strong><i class="fas fa-check-circle text-success me-2"></i>Eligibility:</strong>
-                    <small>{{ scheme.eligibility }}</small>
+    <!-- Schemes Display -->
+    <div class="row">
+        {% if schemes %}
+        {% for scheme in schemes %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm h-100 d-flex flex-column transition-hover"
+                style="transition: all 0.3s ease;">
+                <div class="card-body d-flex flex-column">
+                    <!-- Department Badge -->
+                    <div class="mb-2">
+                        <span class="badge bg-info">{{ scheme.department }}</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h5 class="card-title mb-3">{{ scheme.title }}</h5>
+
+                    <!-- Description -->
+                    <p class="card-text text-muted small mb-3 flex-grow-1">{{ scheme.description }}</p>
+
+                    <!-- Eligibility -->
+                    <div class="mb-3 p-2 bg-light rounded">
+                        <strong class="d-block mb-1">
+                            <i class="fas fa-check-circle text-success me-2"></i>Eligibility
+                        </strong>
+                        <small class="text-dark">{{ scheme.eligibility }}</small>
+                    </div>
+
+                    <!-- Benefits -->
+                    <div class="mb-3 p-2 bg-light rounded">
+                        <strong class="d-block mb-1">
+                            <i class="fas fa-gift text-warning me-2"></i>Benefits
+                        </strong>
+                        <small class="text-dark">{{ scheme.benefits }}</small>
+                    </div>
                 </div>
+
+                <!-- Card Footer with Actions -->
+                <div class="card-footer bg-white border-top d-flex gap-2">
+                    <a href="{{ url_for('scheme_detail', scheme_id=scheme.id) }}"
+                        class="btn btn-sm btn-outline-secondary flex-grow-1">
+                        <i class="fas fa-info-circle me-1"></i>Details
+                    </a>
+                    {% if scheme.apply_link and scheme.apply_link != '#' %}
+                    <a href="{{ scheme.apply_link }}" target="_blank" class="btn btn-sm btn-primary flex-grow-1">
+                        <i class="fas fa-external-link-alt me-1"></i>Apply
+                    </a>
+                    {% else %}
+                    <button class="btn btn-sm btn-secondary flex-grow-1" disabled>
+                        <i class="fas fa-clock me-1"></i>Coming Soon
+                    </button>
+                    {% endif %}
+                </div>
+
+                <!-- Published Date -->
+                <div class="card-footer bg-white border-top pt-2 pb-2">
+                    <small class="text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i>Published: {{ scheme.published_on[:10] }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info border-0 shadow-sm text-center py-5">
                 <div class="mb-3">
-                    <strong><i class="fas fa-gift text-warning me-2"></i>Benefits:</strong>
-                    <small>{{ scheme.benefits }}</small>
+                    <i class="fas fa-search fa-3x text-info opacity-50"></i>
                 </div>
-
-                <a href="{{ url_for('scheme_detail', scheme_id=scheme.id) }}"
-                    class="btn btn-outline-secondary btn-sm me-2">
-                    <i class="fas fa-info-circle me-2"></i>View Details
-                </a>
-                {% if scheme.apply_link and scheme.apply_link != '#' %}
-                <a href="{{ scheme.apply_link }}" target="_blank" class="btn btn-primary btn-sm me-2">
-                    <i class="fas fa-external-link-alt me-2"></i>Apply Now
-                </a>
-                {% endif %}
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">
-                    <i class="fas fa-calendar me-1"></i>Published: {{ scheme.published_on[:10] }}
-                </small>
+                <h5 class="alert-heading">No Schemes Found</h5>
+                <p class="mb-0">No schemes match your search criteria. Try adjusting the filters or search terms.</p>
             </div>
         </div>
+        {% endif %}
     </div>
-    {% endfor %}
-    {% else %}
-    <div class="col-12">
-        <div class="alert alert-info text-center">
-            <h5><i class="fas fa-info-circle me-2"></i>No schemes available</h5>
-            <p class="mb-0">
-                {% if selected_category %}
-                No schemes found in {{ selected_category }} category.
-                {% else %}
-                No schemes available at the moment.
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    {% endif %}
 </div>
+
+<style>
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .fw-500 {
+        font-weight: 500;
+    }
+</style>
 {% endblock %}

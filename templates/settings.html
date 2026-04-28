@@ -3,34 +3,85 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card shadow-sm">
+        <h2 class="mb-4"><i class="fas fa-cog me-2"></i>Account Settings</h2>
+
+        <!-- Edit Profile Card -->
+        <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="fas fa-cog me-2"></i>Account Settings</h4>
+                <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i>Edit Profile</h5>
             </div>
             <div class="card-body">
-                <p class="mb-4">Select your preferred theme and save it to apply across your account.</p>
-
                 <form method="POST" action="{{ url_for('settings') }}">
+                    <input type="hidden" name="action" value="profile">
                     <div class="mb-3">
-                        <label class="form-label">Theme Preference</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="theme_preference" id="themeLight"
-                                value="light" {% if user.theme_preference !='dark' %}checked{% endif %}>
-                            <label class="form-check-label" for="themeLight">
-                                Light Mode
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="theme_preference" id="themeDark"
-                                value="dark" {% if user.theme_preference=='dark' %}checked{% endif %}>
-                            <label class="form-check-label" for="themeDark">
-                                Dark Mode
-                            </label>
-                        </div>
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" value="{{ user.email }}" disabled>
+                        <div class="form-text">Email address cannot be changed.</div>
+                    </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i> Save Preference
+                        <i class="fas fa-save me-1"></i> Update Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Preferences Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-sliders-h me-2"></i>Preferences</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('settings') }}">
+                    <input type="hidden" name="action" value="preferences">
+                    <div class="mb-3">
+                        <label for="location" class="form-label fw-bold">
+                            <i class="fas fa-map-marker-alt me-2 text-danger"></i>Default Village / Location
+                        </label>
+                        <select class="form-select" id="location" name="location">
+                            <option value="">None (Show All Locations)</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc }}" {% if user.location==loc %}selected{% endif %}>{{ loc }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Set your default location to automatically filter schemes and notices for
+                            your area.</div>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i> Save Preferences
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Change Password Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-key me-2"></i>Change Password</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('settings') }}">
+                    <input type="hidden" name="action" value="password">
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="current_password" name="current_password"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" required>
+                        <div class="form-text">Must be at least 6 characters long.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-warning text-dark fw-bold">
+                        <i class="fas fa-lock me-1"></i> Change Password
                     </button>
                 </form>
             </div>

@@ -29,6 +29,12 @@
                                 value="{{ scheme.department if scheme else '' }}" required>
                         </div>
                         <div class="col-md-6">
+                            <label for="location" class="form-label">Location (e.g., Paithan)</label>
+                            <input type="text" class="form-control" id="location" name="location"
+                                value="{{ scheme.location if scheme and scheme.location != 'All' else '' }}"
+                                placeholder="Leave blank for 'All'">
+                        </div>
+                        <div class="col-12">
                             <label for="eligibility" class="form-label">Eligibility</label>
                             <input type="text" class="form-control" id="eligibility" name="eligibility"
                                 value="{{ scheme.eligibility if scheme else '' }}">

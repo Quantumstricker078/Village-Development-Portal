@@ -22,28 +22,36 @@
             <!-- Statistics Cards -->
             <div class="row text-center mt-4">
                 <div class="col-md-4 mb-3">
-                    <div class="card stats-card bg-success h-100">
-                        <div class="card-body">
-                            <h3>{{ schemes_count }}</h3>
-                            <p><i class="fas fa-file-alt me-2"></i>Active Schemes</p>
+                    <a href="/schemes" style="text-decoration: none; cursor: pointer;">
+                        <div class="card stats-card bg-success h-100 transition-hover"
+                            style="transition: all 0.3s ease;">
+                            <div class="card-body">
+                                <h3>{{ schemes_count }}</h3>
+                                <p><i class="fas fa-file-alt me-2"></i>Active Schemes</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="card stats-card bg-info h-100">
-                        <div class="card-body">
-                            <h3>{{ beneficiaries_count }}</h3>
-                            <p><i class="fas fa-users me-2"></i>Beneficiaries</p>
+                    <a href="/beneficiaries" style="text-decoration: none; cursor: pointer;">
+                        <div class="card stats-card bg-info h-100 transition-hover" style="transition: all 0.3s ease;">
+                            <div class="card-body">
+                                <h3>{{ beneficiaries_count }}</h3>
+                                <p><i class="fas fa-users me-2"></i>Beneficiaries</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="card stats-card bg-warning h-100">
-                        <div class="card-body">
-                            <h3>{{ notices_count }}</h3>
-                            <p><i class="fas fa-bullhorn me-2"></i>Notices</p>
+                    <a href="/notices" style="text-decoration: none; cursor: pointer;">
+                        <div class="card stats-card bg-warning h-100 transition-hover"
+                            style="transition: all 0.3s ease;">
+                            <div class="card-body">
+                                <h3>{{ notices_count }}</h3>
+                                <p><i class="fas fa-bullhorn me-2"></i>Notices</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -73,23 +81,28 @@
             <div class="card-body">
                 {% if latest_notices %}
                 {% for notice in latest_notices %}
-                <div class="mb-3 p-3 border rounded">
-                    <h6 class="text-primary">
-                        <i class="fas fa-newspaper me-2"></i>{{ notice.title }}
-                    </h6>
-                    <p class="mb-2">{{ notice.description }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>
-                            Published: {{ notice.publish_date[:10] }}
-                        </small>
-                        {% if notice.attachment_url %}
-                        <a href="{{ notice.attachment_url }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-download me-1"></i>Attachment
-                        </a>
-                        {% endif %}
+                <a href="{{ url_for('notice_detail', notice_id=notice.id) }}"
+                    style="text-decoration: none; color: inherit;">
+                    <div class="mb-3 p-3 border rounded notice-item transition-hover"
+                        style="cursor: pointer; transition: all 0.3s ease;">
+                        <h6 class="text-primary mb-2">
+                            <i class="fas fa-newspaper me-2"></i>{{ notice.title }}
+                        </h6>
+                        <p class="mb-2 text-dark">{{ notice.description[:100] }}{% if notice.description|length > 100
+                            %}...{% endif %}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>
+                                Published: {{ notice.publish_date[:10] }}
+                            </small>
+                            {% if notice.attachment_url %}
+                            <span class="badge bg-secondary" onclick="event.stopPropagation();">
+                                <i class="fas fa-file-alt me-1"></i>Attachment
+                            </span>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                </a>
                 {% endfor %}
                 {% else %}
                 <p class="text-muted text-center">
@@ -194,4 +207,29 @@
         </div>
     </div>
 </div>
+
+<style>
+    .stats-card {
+        transition: all 0.3s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .notice-item {
+        border-left: 4px solid transparent !important;
+    }
+
+    .notice-item:hover {
+        background-color: #f8f9fa !important;
+        border-left-color: #0d6efd !important;
+        transform: translateX(5px);
+    }
+
+    .transition-hover {
+        transition: all 0.3s ease;
+    }
+</style>
 {% endblock %}

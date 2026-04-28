@@ -23,15 +23,17 @@ def init_db(db_path=None):
             email TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
             role TEXT NOT NULL,
-            theme_preference TEXT DEFAULT 'light',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
 
     cursor.execute('PRAGMA table_info(users)')
     user_columns = [row[1] for row in cursor.fetchall()]
-    if 'theme_preference' not in user_columns:
-        cursor.execute("ALTER TABLE users ADD COLUMN theme_preference TEXT DEFAULT 'light'")
+    if 'location' not in user_columns:
+        cursor.execute('ALTER TABLE users ADD COLUMN location TEXT')
+
+    cursor.execute('PRAGMA table_info(users)')
+    user_columns = [row[1] for row in cursor.fetchall()]
     
     # Create notices table
     cursor.execute('''
@@ -65,9 +67,14 @@ def init_db(db_path=None):
             eligibility TEXT,
             benefits TEXT,
             apply_link TEXT,
-            published_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            published_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            location TEXT DEFAULT 'All'
         )
     ''')
+    cursor.execute('PRAGMA table_info(schemes)')
+    scheme_columns = [row[1] for row in cursor.fetchall()]
+    if 'location' not in scheme_columns:
+        cursor.execute('ALTER TABLE schemes ADD COLUMN location TEXT DEFAULT "All"')
     cursor.execute('''
         DELETE FROM schemes
         WHERE id NOT IN (
@@ -170,46 +177,77 @@ def init_db(db_path=None):
     try:
         hashed_password = generate_password_hash('admin123')
         cursor.execute(
-            'INSERT OR IGNORE INTO users (name, email, password_hash, role, theme_preference) VALUES (?, ?, ?, ?, ?)',
-            ('Admin User', 'admin@villageportal.com', hashed_password, 'admin', 'light')
+            'INSERT OR IGNORE INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
+            ('Admin User', 'admin@villageportal.com', hashed_password, 'admin')
         )
     except:
         pass
     
     # Insert sample data
+    # Clean up old test data if present in the database
+    cursor.execute("DELETE FROM services WHERE city = 'Sample Village'")
+    cursor.execute("DELETE FROM schemes WHERE title IN ('Farmers Loan Scheme', 'Student Scholarship', 'Health Insurance', 'Housing Scheme', 'Sillod Solar Subsidy', 'Vaijapur Tractor Scheme', 'Kannad Irrigation Project', 'Soegaon Women Entrepreneurship')")
+    cursor.execute("DELETE FROM notices WHERE title IN ('Monthly Gram Panchayat Meeting', 'Water Supply Maintenance', 'Free Vaccination Camp', 'Electricity Bill Payment')")
+
     cursor.execute('''
-        INSERT OR IGNORE INTO schemes (title, description, department, eligibility, benefits, apply_link) 
+        INSERT OR IGNORE INTO schemes (title, description, department, eligibility, benefits, apply_link, location) 
         VALUES 
-        ('Farmers Loan Scheme', 'Financial assistance for farmers for agricultural development', 'Agriculture', 'Farmers with minimum 2 acres land', 'Up to ₹1,00,000 loan at 4% interest rate', '#'),
-        ('Student Scholarship', 'Scholarship for meritorious students from rural areas', 'Education', 'Students with 80%+ marks in previous year', '₹5000 per year for educational expenses', '#'),
-        ('Health Insurance', 'Free health insurance for below poverty line families', 'Health', 'Families with annual income less than ₹1,00,000', 'Health coverage up to ₹5,00,000 per family', '#'),
-        ('Housing Scheme', 'Affordable housing for rural families', 'Social Welfare', 'Families without own house', '₹2,00,000 subsidy for house construction', '#')
+        ('Paithan Godavari Irrigation Grant', 'Funding for drip and sprinkler irrigation near Godavari basin', 'Agriculture', 'Farmers in Paithan taluka with <5 acres', '90% subsidy on irrigation equipment', '#', 'Paithan'),
+        ('Paithani Saree Weavers Subsidy', 'Financial aid for traditional Paithani weavers', 'Social Welfare', 'Registered weavers in Paithan', '₹50,000 grant for loom upgrade', '#', 'Paithan'),
+        ('Gangapur Sugar Cane Harvester Aid', 'Assistance for purchasing mechanized harvesters', 'Agriculture', 'Sugar cane farmers in Gangapur', '₹5,00,000 subsidy on harvesters', '#', 'Gangapur'),
+        ('Vaijapur Onion Storage Subsidy', 'Grants for building onion storage structures (Kanda Chawl)', 'Agriculture', 'Farmers in Vaijapur', '₹1,00,000 per storage structure', '#', 'Vaijapur'),
+        ('Vaijapur Rural Tech Education', 'Scholarships for IT and technical diploma students', 'Education', 'Students from Vaijapur scoring >70%', 'Full tuition fee waiver', '#', 'Vaijapur'),
+        ('Sillod Maize Crop Insurance', 'Premium-free crop insurance for maize cultivators', 'Agriculture', 'Maize farmers in Sillod', 'Coverage up to ₹40,000 per acre', '#', 'Sillod'),
+        ('Phulambri Dairy Development Grant', 'Support for purchasing high-yield milch animals', 'Agriculture', 'Marginal farmers in Phulambri', '50% subsidy on purchase of 2 cows/buffaloes', '#', 'Phulambri'),
+        ('Phulambri Women SHG Fund', 'Seed capital for Women Self-Help Groups', 'Social Welfare', 'Registered active SHGs in Phulambri', '₹1,00,000 revolving fund', '#', 'Phulambri'),
+        ('Kannad Tribal Education Scholarship', 'Special education grant for tribal students', 'Education', 'Tribal students residing in Kannad', '₹10,000 annual scholarship + free hostel', '#', 'Kannad'),
+        ('Kannad Solar Pump Yojana', 'Subsidized solar water pumps for remote farms', 'Agriculture', 'Farmers in Kannad without grid electricity', '95% subsidy on 3HP/5HP solar pumps', '#', 'Kannad'),
+        ('Khuldabad Heritage Tourism Grant', 'Funding for locals starting homestays or guide services', 'Social Welfare', 'Residents of Khuldabad', '₹2,00,000 low-interest loan', '#', 'Khuldabad'),
+        ('Khuldabad Fruit Orchard Subsidy', 'Support for planting custard apple and mango orchards', 'Agriculture', 'Farmers in Khuldabad', '100% subsidy on saplings and fertilizers', '#', 'Khuldabad'),
+        ('Soegaon Cotton Seed Aid', 'Subsidized high-quality BT cotton seeds', 'Agriculture', 'Cotton farmers in Soegaon', 'Up to 10 packets at 50% cost', '#', 'Soegaon'),
+        ('Soegaon Girl Child Education', 'Financial support for girls completing higher secondary', 'Education', 'Girl students in Soegaon', '₹15,000 fixed deposit upon passing 12th', '#', 'Soegaon'),
+        ('Marathwada Universal Health Cover', 'Comprehensive health insurance for rural families', 'Health', 'All rural families in the district', 'Health cover up to ₹5,00,000 per family', '#', 'All')
     ''')
     
     cursor.execute('''
         INSERT OR IGNORE INTO services (category, name, contact_number, address, in_charge, city) 
         VALUES 
-        ('Health', 'Primary Health Center', '9876543210', 'Main Road, Near Post Office', 'Dr. Sharma', 'Sample Village'),
-        ('Education', 'Government High School', '9876543211', 'School Road, Center Point', 'Principal Verma', 'Sample Village'),
-        ('Police', 'Police Station', '100', 'Station Road, West Side', 'Inspector Singh', 'Sample Village'),
-        ('Bank', 'State Bank Branch', '9876543212', 'Market Road, Main Market', 'Manager Gupta', 'Sample Village')
+        ('Health', 'Paithan Civil Hospital', '9876543220', 'Main Road, Paithan', 'Dr. Patil', 'Paithan'),
+        ('Bank', 'Godavari Rural Bank', '9876543221', 'Market Yard, Paithan', 'Manager Kulkarni', 'Paithan'),
+        ('Agriculture', 'Gangapur Krishi Kendra', '9876543222', 'Krishi Utpanna Bazar Samiti, Gangapur', 'Mr. Jadhav', 'Gangapur'),
+        ('Police', 'Gangapur Taluka Police Station', '100', 'Station Road, Gangapur', 'Inspector Pawar', 'Gangapur'),
+        ('Education', 'Vaijapur Technical Institute', '9876543223', 'College Road, Vaijapur', 'Principal Joshi', 'Vaijapur'),
+        ('Bank', 'State Bank of Vaijapur', '9876543224', 'Main Branch, Vaijapur', 'Manager Deshmukh', 'Vaijapur'),
+        ('Health', 'Sillod Rural Health Clinic', '9876543225', 'Panchayat Road, Sillod', 'Dr. Sharma', 'Sillod'),
+        ('Agriculture', 'Sillod Fertilizer Depot', '9876543226', 'Market Area, Sillod', 'Mr. Kale', 'Sillod'),
+        ('Education', 'Phulambri Zila Parishad School', '9876543227', 'Center Block, Phulambri', 'Headmaster Wagh', 'Phulambri'),
+        ('Police', 'Phulambri Security Post', '100', 'West Highway, Phulambri', 'Sub-Inspector Singh', 'Phulambri'),
+        ('Bank', 'Kannad Cooperative Bank', '9876543228', 'Shivaji Chowk, Kannad', 'Manager Rathi', 'Kannad'),
+        ('Health', 'Kannad Maternity Hospital', '9876543229', 'Civil Road, Kannad', 'Dr. Chavan', 'Kannad'),
+        ('Education', 'Khuldabad Heritage School', '9876543230', 'Dargah Road, Khuldabad', 'Principal Begum', 'Khuldabad'),
+        ('Police', 'Khuldabad Tourist Police', '100', 'Tourism Center, Khuldabad', 'Inspector Khan', 'Khuldabad'),
+        ('Agriculture', 'Soegaon Cotton Development Office', '9876543231', 'Agri Block, Soegaon', 'Mr. Munde', 'Soegaon'),
+        ('Bank', 'Maharashtra Gramin Bank', '9876543232', 'Main Street, Soegaon', 'Manager Joshi', 'Soegaon')
     ''')
     
     cursor.execute('''
         INSERT OR IGNORE INTO notices (title, description, valid_until, scheme_id) 
         VALUES 
-        ('Monthly Gram Panchayat Meeting', 'Monthly village meeting on 15th August at 10:00 AM in Panchayat Office', '2024-08-20', NULL),
-        ('Water Supply Maintenance', 'Water supply will be interrupted on 10th August from 9 AM to 5 PM for pipeline maintenance', '2024-08-12', NULL),
-        ('Free Vaccination Camp', 'Free vaccination camp for children below 5 years on 20th August at Health Center', '2024-08-25', 3),
-        ('Electricity Bill Payment', 'Last date for electricity bill payment extended to 25th August', '2024-08-25', NULL)
+        ('Paithan Canal Water Release Schedule', 'Godavari left bank canal water will be released for Rabi crops starting 1st November.', '2026-11-15', NULL),
+        ('Sillod Market Committee Elections', 'Nominations are open for the Sillod Krishi Utpanna Bazar Samiti elections.', '2026-09-30', NULL),
+        ('Khuldabad Tourism Festival Preparations', 'Local homestay owners are invited to a preparation meeting at the Panchayat office.', '2026-12-10', 11),
+        ('Vaijapur Crop Damage Survey Final List', 'The final list of beneficiaries for the recent unseasonal rain damage is published at the Tehsil office.', '2026-08-25', 4),
+        ('Mega Health Camp in Gangapur', 'Free health checkup and medicine distribution for senior citizens at Gangapur Krishi Kendra ground.', '2026-10-05', 15)
     ''')
     
     cursor.execute('''
         INSERT OR IGNORE INTO beneficiaries (name, age, gender, scheme_id, mobile, status) 
         VALUES 
-        ('Ramesh Kumar', 45, 'Male', 1, '9876543201', 'Approved'),
-        ('Sita Devi', 35, 'Female', 2, '9876543202', 'Pending'),
-        ('Amit Singh', 28, 'Male', 3, '9876543203', 'Approved')
+        ('Tukaram Patil', 52, 'Male', 1, '9876543201', 'Approved'),
+        ('Sujata Kulkarni', 38, 'Female', 2, '9876543202', 'Pending'),
+        ('Namdev Jadhav', 45, 'Male', 3, '9876543203', 'Approved'),
+        ('Anjali Deshmukh', 19, 'Female', 5, '9876543204', 'Approved'),
+        ('Babanrao Kale', 60, 'Male', 6, '9876543205', 'Pending')
     ''')
     
     conn.commit()
@@ -230,12 +268,12 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 class User(UserMixin):
-    def __init__(self, id, name, email, role, theme='light'):
+    def __init__(self, id, name, email, role, location=None):
         self.id = id
         self.name = name
         self.email = email
         self.role = role
-        self.theme = theme
+        self.location = location
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -246,8 +284,7 @@ def load_user(user_id):
     conn.close()
     
     if user:
-        theme_preference = user['theme_preference'] if 'theme_preference' in user.keys() and user['theme_preference'] else 'light'
-        return User(user['id'], user['name'], user['email'], user['role'], theme_preference)
+        return User(user['id'], user['name'], user['email'], user['role'], dict(user).get('location'))
     return None
 
 # Routes
@@ -308,8 +345,7 @@ def login():
         conn.close()
         
         if user and check_password_hash(user['password_hash'], password):
-            theme_preference = user['theme_preference'] if 'theme_preference' in user.keys() and user['theme_preference'] else 'light'
-            user_obj = User(user['id'], user['name'], user['email'], user['role'], theme_preference)
+            user_obj = User(user['id'], user['name'], user['email'], user['role'], dict(user).get('location'))
             login_user(user_obj)
             flash('Login successful!', 'success')
 
@@ -404,8 +440,8 @@ def register():
         try:
             hashed_password = generate_password_hash(password)
             cursor.execute(
-                'INSERT INTO users (name, email, password_hash, role, theme_preference) VALUES (?, ?, ?, ?, ?)',
-                (name, email, hashed_password, 'user', 'light')
+                'INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
+                (name, email, hashed_password, 'user')
             )
             conn.commit()
             conn.close()
@@ -527,12 +563,13 @@ def admin_add_scheme():
         eligibility = request.form['eligibility']
         benefits = request.form['benefits']
         apply_link = request.form['apply_link']
+        location = request.form.get('location', 'All')
         
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO schemes (title, description, department, eligibility, benefits, apply_link) VALUES (?, ?, ?, ?, ?, ?)',
-            (title, description, department, eligibility, benefits, apply_link)
+            'INSERT INTO schemes (title, description, department, eligibility, benefits, apply_link, location) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            (title, description, department, eligibility, benefits, apply_link, location)
         )
         conn.commit()
         conn.close()
@@ -559,10 +596,11 @@ def admin_edit_scheme(scheme_id):
         eligibility = request.form['eligibility']
         benefits = request.form['benefits']
         apply_link = request.form['apply_link']
+        location = request.form.get('location', 'All')
         
         cursor.execute(
-            'UPDATE schemes SET title=?, description=?, department=?, eligibility=?, benefits=?, apply_link=? WHERE id=?',
-            (title, description, department, eligibility, benefits, apply_link, scheme_id)
+            'UPDATE schemes SET title=?, description=?, department=?, eligibility=?, benefits=?, apply_link=?, location=? WHERE id=?',
+            (title, description, department, eligibility, benefits, apply_link, location, scheme_id)
         )
         conn.commit()
         conn.close()
@@ -1073,6 +1111,11 @@ def search_page():
 @app.route('/schemes')
 def schemes():
     category = request.args.get('category', '')
+    
+    location = request.args.get('location', None)
+    if location is None:
+        location = current_user.location if current_user.is_authenticated and current_user.location else ''
+        
     sort = request.args.get('sort', 'latest')
     query = request.args.get('q', '').strip()
     
@@ -1084,6 +1127,9 @@ def schemes():
     if category:
         filters.append('department = ?')
         params.append(category)
+    if location:
+        filters.append('(location = ? OR location = "All")')
+        params.append(location)
     if query:
         filters.append('(title LIKE ? OR description LIKE ? OR eligibility LIKE ? OR benefits LIKE ?)')
         query_param = f'%{query}%'
@@ -1101,9 +1147,15 @@ def schemes():
 
     cursor.execute(sql, tuple(params))
     schemes = cursor.fetchall()
+
+    cursor.execute('SELECT DISTINCT location FROM schemes WHERE location IS NOT NULL AND location != "All"')
+    locations = [row['location'] for row in cursor.fetchall()]
+
+    default_locations = ['Paithan', 'Gangapur', 'Vaijapur', 'Sillod', 'Phulambri', 'Kannad', 'Khuldabad', 'Soegaon']
+    all_locations = sorted(list(set(locations + default_locations)))
     conn.close()
     
-    return render_template('schemes.html', schemes=schemes, selected_category=category, selected_sort=sort, search_query=query, selected_scheme_default=None)
+    return render_template('schemes.html', schemes=schemes, selected_category=category, selected_location=location, locations=all_locations, selected_sort=sort, search_query=query, selected_scheme_default=None)
 
 @app.route('/schemes/<int:scheme_id>')
 def scheme_detail(scheme_id):
@@ -1279,40 +1331,65 @@ def settings():
     cursor = conn.cursor()
 
     if request.method == 'POST':
-        theme = request.form.get('theme_preference', 'light')
-        if theme not in ('light', 'dark'):
-            theme = 'light'
-
-        cursor.execute('UPDATE users SET theme_preference = ? WHERE id = ?', (theme, current_user.id))
+        # Settings handling can be extended here for other preferences
+        location = request.form.get('location', '')
+        cursor.execute('UPDATE users SET location = ? WHERE id = ?', (location, current_user.id))
         conn.commit()
-        conn.close()
-
-        current_user.theme = theme
-        flash('Theme preference updated successfully.', 'success')
+        
+        current_user.location = location
+        flash('Preferences saved successfully!', 'success')
         return redirect(url_for('settings'))
 
     cursor.execute('SELECT * FROM users WHERE id = ?', (current_user.id,))
     user = cursor.fetchone()
+    
+    cursor.execute('SELECT DISTINCT location FROM schemes WHERE location IS NOT NULL AND location != "All"')
+    locations = [row['location'] for row in cursor.fetchall()]
+    default_locations = ['Paithan', 'Gangapur', 'Vaijapur', 'Sillod', 'Phulambri', 'Kannad', 'Khuldabad', 'Soegaon']
+    all_locations = sorted(list(set(locations + default_locations)))
+    
     conn.close()
 
-    return render_template('settings.html', user=user)
+    return render_template('settings.html', user=user, locations=all_locations)
 
 @app.route('/services')
 def services():
     category = request.args.get('category', '')
     
+    location = request.args.get('location', None)
+    if location is None:
+        location = current_user.location if current_user.is_authenticated and current_user.location else ''
+    
     conn = get_db()
     cursor = conn.cursor()
     
-    if category:
-        cursor.execute('SELECT * FROM services WHERE category = ?', (category,))
-    else:
-        cursor.execute('SELECT * FROM services')
+    filters = []
+    params = []
     
+    if category:
+        filters.append('category = ?')
+        params.append(category)
+        
+    if location:
+        filters.append('(city = ? OR city = "All" OR city = "Sample Village")')
+        params.append(location)
+        
+    sql = 'SELECT * FROM services'
+    if filters:
+        sql += ' WHERE ' + ' AND '.join(filters)
+    sql += ' ORDER BY name ASC'
+        
+    cursor.execute(sql, tuple(params))
     services = cursor.fetchall()
+    
+    cursor.execute('SELECT DISTINCT city FROM services WHERE city IS NOT NULL AND city != "" AND city != "All"')
+    locations = [row['city'] for row in cursor.fetchall()]
+    default_locations = ['Paithan', 'Gangapur', 'Vaijapur', 'Sillod', 'Phulambri', 'Kannad', 'Khuldabad', 'Soegaon']
+    all_locations = sorted(list(set(locations + default_locations)))
+    
     conn.close()
     
-    return render_template('services.html', services=services, selected_category=category)
+    return render_template('services.html', services=services, selected_category=category, selected_location=location, locations=all_locations)
 
 @app.route('/beneficiaries')
 @login_required
@@ -1368,12 +1445,13 @@ def add_scheme():
         eligibility = request.form['eligibility']
         benefits = request.form['benefits']
         apply_link = request.form['apply_link']
+        location = request.form.get('location', 'All')
         
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO schemes (title, description, department, eligibility, benefits, apply_link) VALUES (?, ?, ?, ?, ?, ?)',
-            (title, description, department, eligibility, benefits, apply_link)
+            'INSERT INTO schemes (title, description, department, eligibility, benefits, apply_link, location) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            (title, description, department, eligibility, benefits, apply_link, location)
         )
         conn.commit()
         conn.close()
