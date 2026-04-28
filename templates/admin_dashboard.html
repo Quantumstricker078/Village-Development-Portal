@@ -3,6 +3,53 @@
 {% block content %}
 <h2 class="mb-4"><i class="fas fa-cog me-2"></i>Admin Dashboard</h2>
 
+<!-- Admin Notifications -->
+{% if notifications %}
+<div class="alert alert-warning mb-4">
+    <h5><i class="fas fa-bell me-2"></i>Notifications</h5>
+    <ul class="mb-0">
+        {% for notification in notifications %}
+        <li>{{ notification }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- Management Links -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin_schemes') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-file-alt me-2"></i>Manage Schemes
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin_notices') }}" class="btn btn-info w-100">
+                            <i class="fas fa-bullhorn me-2"></i>Manage Notices
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin_services') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-building me-2"></i>Manage Services
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin_beneficiaries') }}" class="btn btn-success w-100">
+                            <i class="fas fa-users me-2"></i>Manage Beneficiaries
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Statistics Cards -->
 <div class="row mb-4">
     <div class="col-md-3 mb-3">

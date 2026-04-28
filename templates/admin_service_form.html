@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-{{ 'plus' if not service else 'edit' }} me-2"></i>
+                    {{ 'Add New Service' if not service else 'Edit Service' }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="category" class="form-label">Category *</label>
+                            <input type="text" class="form-control" id="category" name="category"
+                                value="{{ service.category if service else '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Name *</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ service.name if service else '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contact_number" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" id="contact_number" name="contact_number"
+                                value="{{ service.contact_number if service else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="in_charge" class="form-label">Person In Charge</label>
+                            <input type="text" class="form-control" id="in_charge" name="in_charge"
+                                value="{{ service.in_charge if service else '' }}">
+                        </div>
+                        <div class="col-12">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" name="address"
+                                rows="2">{{ service.address if service else '' }}</textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city"
+                                value="{{ service.city if service else '' }}">
+                        </div>
+                        <div class="col-12 text-end">
+                            <a href="{{ url_for('admin_services') }}" class="btn btn-outline-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ 'Add Service' if not service else 'Update Service' }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

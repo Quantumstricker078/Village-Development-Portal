@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-user-circle me-2"></i>My Dashboard</h2>
+
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>My Profile</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ user.name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Role:</strong> {{ user.role }}</p>
+                <p><strong>Member Since:</strong> {{ user.created_at[:10] }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Approval Progress</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h3 class="mb-1">{{ status_counts.Pending }}</h3>
+                            <p class="mb-0">Pending</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h3 class="mb-1">{{ status_counts.Approved }}</h3>
+                            <p class="mb-0">Approved</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h3 class="mb-1">{{ status_counts.Rejected }}</h3>
+                            <p class="mb-0">Rejected</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress" style="height: 24px;">
+                    {% set total = status_counts.Pending + status_counts.Approved + status_counts.Rejected %}
+                    {% if total == 0 %}
+                    <div class="progress-bar bg-secondary w-100">No requests yet</div>
+                    {% else %}
+                    <div class="progress-bar bg-warning" role="progressbar"
+                        style="width: {{ (status_counts.Pending / total * 100) | round(0) }}%">
+                        Pending {{ (status_counts.Pending / total * 100) | round(0) }}%
+                    </div>
+                    <div class="progress-bar bg-success" role="progressbar"
+                        style="width: {{ (status_counts.Approved / total * 100) | round(0) }}%">
+                        Approved {{ (status_counts.Approved / total * 100) | round(0) }}%
+                    </div>
+                    <div class="progress-bar bg-danger" role="progressbar"
+                        style="width: {{ (status_counts.Rejected / total * 100) | round(0) }}%">
+                        Rejected {{ (status_counts.Rejected / total * 100) | round(0) }}%
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if history %}
+                {% set latest = history[0] %}
+                <div class="mt-4 p-3 bg-white rounded shadow-sm">
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h6 class="mb-2">Latest request summary</h6>
+                            <p class="mb-1"><strong>Scheme:</strong> {{ latest.scheme_name or 'Unknown Scheme' }}</p>
+                            <p class="mb-0"><strong>Status:</strong>
+                                <span
+                                    class="badge bg-{{ 'success' if latest.status == 'Approved' else 'warning' if latest.status == 'Pending' else 'danger' }}">
+                                    {{ latest.status }}
+                                </span>
+                            </p>
+                        </div>
+                        <a href="{{ url_for('request_scheme', scheme_id=latest.scheme_id) }}" class="btn btn-primary">
+                            <i class="fas fa-search me-1"></i>Check Status
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Approval History</h5>
+    </div>
+    <div class="card-body">
+        <!-- Filters -->
+        <form method="get" action="{{ url_for('user_dashboard') }}" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label for="status" class="form-label">Filter by Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="" {% if not status_filter %}selected{% endif %}>All Statuses</option>
+                    <option value="Pending" {% if status_filter=='Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Approved" {% if status_filter=='Approved' %}selected{% endif %}>Approved</option>
+                    <option value="Rejected" {% if status_filter=='Rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="date" class="form-label">Filter by Date</label>
+                <input type="date" class="form-control" id="date" name="date" value="{{ date_filter }}">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
+                <a href="{{ url_for('user_dashboard') }}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+
+        {% if history %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Scheme</th>
+                        <th>Status</th>
+                        <th>Mobile</th>
+                        <th>Requested On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <td>{{ item.scheme_name or 'Unknown Scheme' }}</td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'success' if item.status == 'Approved' else 'warning' if item.status == 'Pending' else 'danger' }}">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td>{{ item.mobile }}</td>
+                        <td>{{ item.registered_on[:10] }}</td>
+                        <td>
+                            <a href="{{ url_for('request_scheme', scheme_id=item.scheme_id) }}"
+                                class="btn btn-sm btn-outline-primary">
+                                Check Status
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <h5><i class="fas fa-info-circle me-2"></i>No request history found</h5>
+            <p class="mb-0">Submit a scheme request to begin tracking your approval progress.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

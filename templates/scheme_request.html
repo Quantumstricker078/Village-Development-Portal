@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-white p-3 rounded shadow-sm">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('schemes') }}">Schemes</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('scheme_detail', scheme_id=scheme.id) }}">{{ scheme.title }}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Request</li>
+    </ol>
+</nav>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0"><i class="fas fa-file-alt me-2"></i>Request {{ scheme.title }}</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3"><strong>Department:</strong> {{ scheme.department }}</p>
+                <p class="mb-4">{{ scheme.description }}</p>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-check-circle text-success me-2"></i>Eligibility</h6>
+                        <p>{{ scheme.eligibility }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-gift text-warning me-2"></i>Benefits</h6>
+                        <p>{{ scheme.benefits }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-muted mb-1"><strong>Published on:</strong> {{ scheme.published_on[:10] }}</p>
+                    {% if scheme.apply_link and scheme.apply_link != '#' %}
+                    <p><strong>Official application link:</strong>
+                        <a href="{{ scheme.apply_link }}" target="_blank">Open application page</a>
+                    </p>
+                    {% endif %}
+                </div>
+
+                {% if progress %}
+                <div class="mb-4 p-4 bg-white rounded border">
+                    <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Your approval progress</h5>
+                    <p class="mb-2"><strong>Request:</strong> {{ progress.name }} for {{ scheme.title }}</p>
+                    <p class="mb-3"><strong>Current Status:</strong>
+                        <span
+                            class="badge bg-{{ 'success' if progress.status == 'Approved' else 'warning' if progress.status == 'Pending' else 'danger' }}">
+                            {{ progress.status }}
+                        </span>
+                    </p>
+                    <div class="progress" style="height: 24px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ 'success' if progress.status == 'Approved' else 'warning' if progress.status == 'Pending' else 'danger' }}"
+                            role="progressbar"
+                            style="width: {{ 100 if progress.status == 'Approved' else 60 if progress.status == 'Pending' else 40 }}%">
+                            {{ 100 if progress.status == 'Approved' else 60 if progress.status == 'Pending' else 40 }}%
+                        </div>
+                    </div>
+                    {% if progress.status != 'Approved' %}
+                    <p class="text-muted mt-3 mb-0">We are reviewing your request. Keep an eye on this page for updates.
+                    </p>
+                    {% else %}
+                    <p class="text-muted mt-3 mb-0">Your application has been approved. Please follow the scheme
+                        instructions or contact the administrator for next steps.</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="mb-4 p-4 bg-light rounded">
+                    <h5 class="mb-3"><i class="fas fa-paper-plane me-2"></i>Submit your request</h5>
+                    <form method="post" action="{{ url_for('submit_scheme_request') }}">
+                        <input type="hidden" name="selected_scheme" value="{{ scheme.title }}">
+                        <input type="hidden" name="scheme_id" value="{{ scheme.id }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="full_name" class="form-label">Full Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" required
+                                    placeholder="Enter your full name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="age" class="form-label">Age <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="age" name="age" required min="1" max="150"
+                                    placeholder="Enter your age">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="dob" class="form-label">Date of Birth <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="dob" name="dob" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="aadhaar" class="form-label">Aadhaar Number <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="aadhaar" name="aadhaar" required
+                                    placeholder="Enter your Aadhaar number">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter your email">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="mobile" class="form-label">Mobile Number <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="mobile" name="mobile" required
+                                    placeholder="Enter your mobile number">
+                            </div>
+                            <div class="col-12">
+                                <label for="comments" class="form-label">Comments / Request Details</label>
+                                <textarea class="form-control" id="comments" name="comments" rows="3"
+                                    placeholder="Optional comments about your request"></textarea>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Request
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="d-flex justify-content-between gap-2">
+                    <a href="{{ url_for('scheme_detail', scheme_id=scheme.id) }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Scheme Details</a>
+                    <a href="{{ url_for('schemes') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-list me-2"></i>Back to Schemes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

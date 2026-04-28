@@ -5,25 +5,47 @@
 
 {% if notices %}
 {% for notice in notices %}
-<div class="card mb-4 shadow-sm">
+<div class="card mb-4 shadow-sm position-relative">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-start">
-            <h5 class="card-title text-primary">{{ notice.title }}</h5>
-            <span class="badge bg-info">{{ notice.publish_date[:10] }}</span>
-        </div>
-        <p class="card-text mt-3">{{ notice.description }}</p>
+            <div class="flex-grow-1">
+                <h5 class="card-title text-primary mb-2">
+                    <i class="fas fa-bullhorn me-2"></i>
+                    {{ notice.title }}
+                </h5>
+                <p class="card-text text-muted mb-3">{{ notice.description }}</p>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
+                {% if notice.scheme_id %}
+                <div class="mb-3">
+                    <a href="{{ url_for('scheme_detail', scheme_id=notice.scheme_id) }}"
+                        class="btn btn-sm btn-success text-white">
+                        <i class="fas fa-arrow-right me-1"></i>View Related Scheme & Apply
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <span class="badge bg-info ms-3">{{ notice.publish_date[:10] }}</span>
+        </div>
+
+        <hr class="my-3">
+
+        <div class="d-flex justify-content-between align-items-center">
             <div>
                 <small class="text-muted">
-                    <strong>Valid Until:</strong> {{ notice.valid_until }}
+                    <i class="fas fa-calendar me-1"></i>
+                    <strong>Valid Until:</strong> {{ notice.valid_until or 'Ongoing' }}
                 </small>
             </div>
-            {% if notice.attachment_url %}
-            <a href="{{ notice.attachment_url }}" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-download me-1"></i>Download Attachment
-            </a>
-            {% endif %}
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('notice_detail', notice_id=notice.id) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-info-circle me-1"></i>Details
+                </a>
+                {% if notice.attachment_url %}
+                <a href="{{ notice.attachment_url }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-download me-1"></i>Download
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

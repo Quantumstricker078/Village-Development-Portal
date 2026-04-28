@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-{{ 'plus' if not beneficiary else 'edit' }} me-2"></i>
+                    {{ 'Add New Beneficiary' if not beneficiary else 'Edit Beneficiary' }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Name *</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ beneficiary.name if beneficiary else '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contact" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" id="contact" name="contact"
+                                value="{{ beneficiary.contact if beneficiary else '' }}">
+                        </div>
+                        <div class="col-12">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" name="address"
+                                rows="2">{{ beneficiary.address if beneficiary else '' }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="scheme_id" class="form-label">Scheme *</label>
+                            <select class="form-select" id="scheme_id" name="scheme_id" required>
+                                <option value="">Select a scheme</option>
+                                {% for scheme in schemes %}
+                                <option value="{{ scheme.id }}" {% if beneficiary and beneficiary.scheme_id==scheme.id
+                                    %}selected{% endif %}>{{ scheme.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="pending" {% if beneficiary and beneficiary.status=='pending' %}selected{%
+                                    endif %}>Pending</option>
+                                <option value="approved" {% if beneficiary and beneficiary.status=='approved'
+                                    %}selected{% endif %}>Approved</option>
+                                <option value="rejected" {% if beneficiary and beneficiary.status=='rejected'
+                                    %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes"
+                                rows="3">{{ beneficiary.notes if beneficiary else '' }}</textarea>
+                        </div>
+                        <div class="col-12 text-end">
+                            <a href="{{ url_for('admin_beneficiaries') }}"
+                                class="btn btn-outline-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ 'Add Beneficiary' if not beneficiary else 'Update
+                                Beneficiary' }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

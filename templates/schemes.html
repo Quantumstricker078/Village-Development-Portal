@@ -3,6 +3,43 @@
 {% block content %}
 <h2 class="mb-4"><i class="fas fa-file-alt me-2"></i>Government Schemes</h2>
 
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" action="{{ url_for('schemes') }}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="q" class="form-label">Search schemes</label>
+                <input type="text" class="form-control" id="q" name="q" value="{{ search_query }}"
+                    placeholder="Search title, benefits, eligibility">
+            </div>
+            <div class="col-md-3">
+                <label for="sort" class="form-label">Sort by</label>
+                <select class="form-select" id="sort" name="sort">
+                    <option value="latest" {% if selected_sort=='latest' %}selected{% endif %}>Latest</option>
+                    <option value="relevance" {% if selected_sort=='relevance' %}selected{% endif %}>Relevance</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="category" class="form-label">Department</label>
+                <select class="form-select" id="category" name="category">
+                    <option value="" {% if not selected_category %}selected{% endif %}>All Departments</option>
+                    <option value="Agriculture" {% if selected_category=='Agriculture' %}selected{% endif %}>Agriculture
+                    </option>
+                    <option value="Education" {% if selected_category=='Education' %}selected{% endif %}>Education
+                    </option>
+                    <option value="Health" {% if selected_category=='Health' %}selected{% endif %}>Health</option>
+                    <option value="Social Welfare" {% if selected_category=='Social Welfare' %}selected{% endif %}>
+                        Social Welfare</option>
+                </select>
+            </div>
+            <div class="col-md-2 text-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-1"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Category Filter -->
 <div class="card mb-4">
     <div class="card-body">
@@ -31,6 +68,59 @@
     </div>
 </div>
 
+<!-- Dummy Application / Policy Request Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Submit a Scheme / Policy Request</h5>
+        <p class="card-text">Select a scheme or other policy, add your details, and submit a dummy request for review.
+        </p>
+        <form method="post" action="/schemes/submit">
+            <input type="hidden" name="category" value="{{ selected_category }}">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name"
+                        placeholder="Enter your name" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                </div>
+                <div class="col-md-4">
+                    <label for="selected_scheme" class="form-label">Choose Scheme / Policy</label>
+                    <select class="form-select" id="selected_scheme" name="selected_scheme" required>
+                        <option value="" disabled {{ 'selected' if not selected_scheme_default }}>Select a scheme or
+                            policy</option>
+                        {% for scheme in schemes %}
+                        <option value="{{ scheme.title }}" {% if selected_scheme_default==scheme.title %}selected{%
+                            endif %}>{{ scheme.title }} ({{ scheme.department }})</option>
+                        {% endfor %}
+                        <option value="Employment Support Policy" {% if
+                            selected_scheme_default=='Employment Support Policy' %}selected{% endif %}>Employment
+                            Support Policy</option>
+                        <option value="Community Welfare Policy" {% if
+                            selected_scheme_default=='Community Welfare Policy' %}selected{% endif %}>Community Welfare
+                            Policy</option>
+                        <option value="Agriculture Subsidy Policy" {% if
+                            selected_scheme_default=='Agriculture Subsidy Policy' %}selected{% endif %}>Agriculture
+                            Subsidy Policy</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="comments" class="form-label">Comments / Requirement</label>
+                    <textarea class="form-control" id="comments" name="comments" rows="2"
+                        placeholder="Describe your request or policy interest"></textarea>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Request
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Schemes List -->
 <div class="row">
     {% if schemes %}
@@ -54,8 +144,12 @@
                     <small>{{ scheme.benefits }}</small>
                 </div>
 
+                <a href="{{ url_for('scheme_detail', scheme_id=scheme.id) }}"
+                    class="btn btn-outline-secondary btn-sm me-2">
+                    <i class="fas fa-info-circle me-2"></i>View Details
+                </a>
                 {% if scheme.apply_link and scheme.apply_link != '#' %}
-                <a href="{{ scheme.apply_link }}" target="_blank" class="btn btn-primary btn-sm">
+                <a href="{{ scheme.apply_link }}" target="_blank" class="btn btn-primary btn-sm me-2">
                     <i class="fas fa-external-link-alt me-2"></i>Apply Now
                 </a>
                 {% endif %}

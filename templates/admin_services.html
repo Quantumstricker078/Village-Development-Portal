@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-building me-2"></i>Manage Services</h2>
+            <a href="{{ url_for('admin_add_service') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add New Service
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if services %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Contact</th>
+                                <th>City</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                            <tr>
+                                <td>{{ service.name }}</td>
+                                <td>{{ service.category }}</td>
+                                <td>{{ service.contact_number or 'N/A' }}</td>
+                                <td>{{ service.city }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_edit_service', service_id=service.id) }}"
+                                        class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="{{ url_for('admin_delete_service', service_id=service.id) }}"
+                                        class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted">No services found.</p>
+                    <a href="{{ url_for('admin_add_service') }}" class="btn btn-primary">Add First Service</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

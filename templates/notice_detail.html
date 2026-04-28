@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-white p-3 rounded shadow-sm">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('notices') }}">Notices</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ notice.title }}</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h3 class="mb-0"><i class="fas fa-bullhorn me-2"></i>{{ notice.title }}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-2"><strong>Published on:</strong> {{ notice.publish_date[:10] }}</p>
+                <p class="text-muted mb-3"><strong>Valid until:</strong> {{ notice.valid_until or 'N/A' }}</p>
+                <p>{{ notice.description }}</p>
+
+                {% if notice.scheme_id %}
+                <div class="mt-4">
+                    <a href="{{ url_for('scheme_detail', scheme_id=notice.scheme_id) }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-link me-1"></i>View related scheme: {{ notice.scheme_title or 'Scheme details'
+                        }}
+                    </a>
+                </div>
+                {% endif %}
+
+                {% if notice.attachment_url %}
+                <div class="mt-4">
+                    <a href="{{ notice.attachment_url }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-download me-1"></i>Download attachment
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer text-end">
+                <a href="{{ url_for('notices') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Notices
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
