@@ -172,6 +172,8 @@ def init_db(db_path=None):
     notice_columns = [row[1] for row in cursor.fetchall()]
     if 'scheme_id' not in notice_columns:
         cursor.execute('ALTER TABLE notices ADD COLUMN scheme_id INTEGER')
+    if 'location' not in notice_columns:
+        cursor.execute('ALTER TABLE notices ADD COLUMN location TEXT DEFAULT "All"')
     
     # Insert default admin user
     try:
@@ -192,22 +194,25 @@ def init_db(db_path=None):
     cursor.execute('''
         INSERT OR IGNORE INTO schemes (title, description, department, eligibility, benefits, apply_link, location) 
         VALUES 
-        ('Paithan Godavari Irrigation Grant', 'Funding for drip and sprinkler irrigation near Godavari basin', 'Agriculture', 'Farmers in Paithan taluka with <5 acres', '90% subsidy on irrigation equipment', '#', 'Paithan'),
-        ('Paithani Saree Weavers Subsidy', 'Financial aid for traditional Paithani weavers', 'Social Welfare', 'Registered weavers in Paithan', '₹50,000 grant for loom upgrade', '#', 'Paithan'),
-        ('Gangapur Sugar Cane Harvester Aid', 'Assistance for purchasing mechanized harvesters', 'Agriculture', 'Sugar cane farmers in Gangapur', '₹5,00,000 subsidy on harvesters', '#', 'Gangapur'),
-        ('Vaijapur Onion Storage Subsidy', 'Grants for building onion storage structures (Kanda Chawl)', 'Agriculture', 'Farmers in Vaijapur', '₹1,00,000 per storage structure', '#', 'Vaijapur'),
-        ('Vaijapur Rural Tech Education', 'Scholarships for IT and technical diploma students', 'Education', 'Students from Vaijapur scoring >70%', 'Full tuition fee waiver', '#', 'Vaijapur'),
-        ('Sillod Maize Crop Insurance', 'Premium-free crop insurance for maize cultivators', 'Agriculture', 'Maize farmers in Sillod', 'Coverage up to ₹40,000 per acre', '#', 'Sillod'),
-        ('Phulambri Dairy Development Grant', 'Support for purchasing high-yield milch animals', 'Agriculture', 'Marginal farmers in Phulambri', '50% subsidy on purchase of 2 cows/buffaloes', '#', 'Phulambri'),
-        ('Phulambri Women SHG Fund', 'Seed capital for Women Self-Help Groups', 'Social Welfare', 'Registered active SHGs in Phulambri', '₹1,00,000 revolving fund', '#', 'Phulambri'),
-        ('Kannad Tribal Education Scholarship', 'Special education grant for tribal students', 'Education', 'Tribal students residing in Kannad', '₹10,000 annual scholarship + free hostel', '#', 'Kannad'),
-        ('Kannad Solar Pump Yojana', 'Subsidized solar water pumps for remote farms', 'Agriculture', 'Farmers in Kannad without grid electricity', '95% subsidy on 3HP/5HP solar pumps', '#', 'Kannad'),
-        ('Khuldabad Heritage Tourism Grant', 'Funding for locals starting homestays or guide services', 'Social Welfare', 'Residents of Khuldabad', '₹2,00,000 low-interest loan', '#', 'Khuldabad'),
-        ('Khuldabad Fruit Orchard Subsidy', 'Support for planting custard apple and mango orchards', 'Agriculture', 'Farmers in Khuldabad', '100% subsidy on saplings and fertilizers', '#', 'Khuldabad'),
-        ('Soegaon Cotton Seed Aid', 'Subsidized high-quality BT cotton seeds', 'Agriculture', 'Cotton farmers in Soegaon', 'Up to 10 packets at 50% cost', '#', 'Soegaon'),
-        ('Soegaon Girl Child Education', 'Financial support for girls completing higher secondary', 'Education', 'Girl students in Soegaon', '₹15,000 fixed deposit upon passing 12th', '#', 'Soegaon'),
-        ('Marathwada Universal Health Cover', 'Comprehensive health insurance for rural families', 'Health', 'All rural families in the district', 'Health cover up to ₹5,00,000 per family', '#', 'All')
+        ('Paithan Godavari Irrigation Grant', 'Comprehensive funding for farmers to install modern drip and sprinkler irrigation systems near the Godavari river basin to conserve water, reduce soil erosion, and improve crop yield.', 'Agriculture', 'Small and marginal farmers residing in Paithan taluka with <5 acres. Must have valid 7/12 extract.', '90% direct subsidy on irrigation equipment, plus free installation and maintenance training.', '#', 'Paithan'),
+        ('Paithani Saree Weavers Subsidy', 'Financial aid and capacity building program to preserve the traditional art of Paithani weaving by upgrading looms and purchasing high-quality raw silk.', 'Social Welfare', 'Registered traditional weavers in Paithan with a valid artisan card.', '₹50,000 one-time grant for loom modernization and subsidized silk yarn quotas.', '#', 'Paithan'),
+        ('Gangapur Sugar Cane Harvester Aid', 'Capital assistance program to help cooperative farming groups and farmers purchase modern mechanized sugarcane harvesters, reducing manual labor dependency.', 'Agriculture', 'Sugar cane farmers or cooperatives in Gangapur with >10 acres.', '₹5,00,000 subsidy on harvesters and low-interest rates on remaining loan.', '#', 'Gangapur'),
+        ('Vaijapur Onion Storage Subsidy', 'Infrastructure grant for the construction of scientific ventilated onion storage structures (Kanda Chawl) to prevent post-harvest losses.', 'Agriculture', 'Active farmers in Vaijapur producing at least 50 quintals of onions annually.', '₹1,00,000 assistance per standard storage structure, disbursed in two stages.', '#', 'Vaijapur'),
+        ('Vaijapur Rural Tech Education', 'Merit-based scholarships supporting rural students pursuing IT, computer science, and technical diploma courses in recognized institutes.', 'Education', 'Students from Vaijapur scoring >70% with family income below ₹2.5 Lakhs.', 'Full tuition fee waiver for up to 3 years + ₹20,000 one-time laptop allowance.', '#', 'Vaijapur'),
+        ('Sillod Maize Crop Insurance', 'State-backed, premium-free crop insurance scheme providing a safety net against natural calamities, erratic rainfall, and severe pest attacks.', 'Agriculture', 'Registered maize cultivating farmers in Sillod with documented sowing records.', 'Guaranteed financial coverage up to ₹40,000 per acre in case of crop failure.', '#', 'Sillod'),
+        ('Phulambri Dairy Development Grant', 'Support for purchasing high-yield milch animals to boost local dairy production, create employment, and increase marginal farmer income.', 'Agriculture', 'Marginal farmers in Phulambri with basic active dairy infrastructure.', '50% subsidy on purchase of 2 cows/buffaloes and free veterinary checkups.', '#', 'Phulambri'),
+        ('Phulambri Women SHG Fund', 'Seed capital and revolving fund designed for Women Self-Help Groups (SHGs) to start local businesses, handicrafts, and agro-processing units.', 'Social Welfare', 'Registered and active Women SHGs operating within Phulambri.', '₹1,00,000 revolving fund, priority market access, and business training.', '#', 'Phulambri'),
+        ('Kannad Tribal Education Scholarship', 'Special education grant and hostel accommodation support ensuring continuous higher secondary and college education for tribal students.', 'Education', 'Tribal students residing in Kannad taluka pursuing higher education.', '₹10,000 annual scholarship, free boarding, and free study materials.', '#', 'Kannad'),
+        ('Kannad Solar Pump Yojana', 'Subsidized solar water pumps for remote agricultural lands lacking reliable grid electricity, promoting green energy in farming.', 'Agriculture', 'Farmers in Kannad without access to agricultural grid electricity connections.', '95% subsidy on 3HP/5HP solar water pumps and 5 years comprehensive warranty.', '#', 'Kannad'),
+        ('Khuldabad Heritage Tourism Grant', 'Funding for locals starting registered homestays, cultural guide services, or heritage walks to boost local eco-tourism.', 'Social Welfare', 'Residents of Khuldabad owning property suitable for converting to a homestay.', '₹2,00,000 low-interest loan with a 2-year repayment moratorium.', '#', 'Khuldabad'),
+        ('Khuldabad Fruit Orchard Subsidy', 'Support for planting drought-resistant custard apple and high-density mango orchards to diversify agricultural income.', 'Agriculture', 'Farmers in Khuldabad with suitable land holding and water availability.', '100% subsidy on saplings, organic fertilizers, and primary drip setup.', '#', 'Khuldabad'),
+        ('Soegaon Cotton Seed Aid', 'Subsidized provision of high-quality, pest-resistant BT cotton seeds prior to the Kharif sowing season to ensure high yields.', 'Agriculture', 'Registered cotton cultivating farmers in Soegaon taluka.', 'Up to 10 packets of premium cotton seeds at 50% subsidized cost.', '#', 'Soegaon'),
+        ('Soegaon Girl Child Education', 'Financial support incentive for girls completing higher secondary education to reduce dropout rates and encourage higher studies.', 'Education', 'Girl students in Soegaon completing their 12th standard education.', '₹15,000 fixed deposit given upon successfully passing the 12th board exams.', '#', 'Soegaon'),
+        ('Marathwada Universal Health Cover', 'Comprehensive cashless health insurance scheme covering major surgeries, critical illnesses, and hospitalization for rural families.', 'Health', 'All rural families in the district possessing a valid yellow or orange ration card.', 'Cashless health cover up to ₹5,00,000 per family per year at network hospitals.', '#', 'All')
     ''')
+    
+    # Dynamically update default mock schemes to point to the actual application endpoint, removing the "Coming Soon" states
+    cursor.execute('UPDATE schemes SET apply_link = "/schemes/request/" || id WHERE apply_link = "#"')
     
     cursor.execute('''
         INSERT OR IGNORE INTO services (category, name, contact_number, address, in_charge, city) 
@@ -231,13 +236,13 @@ def init_db(db_path=None):
     ''')
     
     cursor.execute('''
-        INSERT OR IGNORE INTO notices (title, description, valid_until, scheme_id) 
+        INSERT OR IGNORE INTO notices (title, description, valid_until, scheme_id, location) 
         VALUES 
-        ('Paithan Canal Water Release Schedule', 'Godavari left bank canal water will be released for Rabi crops starting 1st November.', '2026-11-15', NULL),
-        ('Sillod Market Committee Elections', 'Nominations are open for the Sillod Krishi Utpanna Bazar Samiti elections.', '2026-09-30', NULL),
-        ('Khuldabad Tourism Festival Preparations', 'Local homestay owners are invited to a preparation meeting at the Panchayat office.', '2026-12-10', 11),
-        ('Vaijapur Crop Damage Survey Final List', 'The final list of beneficiaries for the recent unseasonal rain damage is published at the Tehsil office.', '2026-08-25', 4),
-        ('Mega Health Camp in Gangapur', 'Free health checkup and medicine distribution for senior citizens at Gangapur Krishi Kendra ground.', '2026-10-05', 15)
+        ('Paithan Canal Water Release Schedule', 'Godavari left bank canal water will be released for Rabi crops starting 1st November. All farmers are requested to clear their field channels and ensure efficient water usage.', '2026-11-15', NULL, 'Paithan'),
+        ('Sillod Market Committee Elections', 'Nominations are open for the Sillod Krishi Utpanna Bazar Samiti elections. Interested candidates must submit their forms along with required documents before the deadline.', '2026-09-30', NULL, 'Sillod'),
+        ('Khuldabad Tourism Festival Preparations', 'Local homestay owners and tour guides are invited to a preparation meeting at the Panchayat office to discuss arrangements and safety protocols for the upcoming winter heritage festival.', '2026-12-10', 11, 'Khuldabad'),
+        ('Vaijapur Crop Damage Survey Final List', 'The final list of beneficiaries for the recent unseasonal rain crop damage is published at the Tehsil office. Farmers can also check their status online on the portal.', '2026-08-25', 4, 'Vaijapur'),
+        ('Mega Health Camp in Gangapur', 'Free comprehensive health checkup and essential medicine distribution for senior citizens at Gangapur Krishi Kendra ground. Specialists in cardiology and orthopedics will be available.', '2026-10-05', 15, 'Gangapur')
     ''')
     
     cursor.execute('''
@@ -293,19 +298,30 @@ def index():
     conn = get_db()
     cursor = conn.cursor()
     
+    user_location = None
+    if current_user.is_authenticated and current_user.role != 'admin' and current_user.location:
+        user_location = current_user.location
+    
     # Get counts for dashboard
-    cursor.execute('SELECT COUNT(*) as count FROM schemes')
+    if user_location:
+        cursor.execute('SELECT COUNT(*) as count FROM schemes WHERE location = ? OR location = "All"', (user_location,))
+    else:
+        cursor.execute('SELECT COUNT(*) as count FROM schemes')
     schemes_count = cursor.fetchone()['count']
     
     cursor.execute('SELECT COUNT(*) as count FROM beneficiaries')
     beneficiaries_count = cursor.fetchone()['count']
     
-    cursor.execute('SELECT COUNT(*) as count FROM notices')
-    notices_count = cursor.fetchone()['count']
-    
-    # Get latest notices
-    cursor.execute('SELECT * FROM notices ORDER BY publish_date DESC LIMIT 3')
-    latest_notices = cursor.fetchall()
+    if user_location:
+        cursor.execute('SELECT COUNT(*) as count FROM notices WHERE location = ? OR location = "All"', (user_location,))
+        notices_count = cursor.fetchone()['count']
+        cursor.execute('SELECT * FROM notices WHERE location = ? OR location = "All" ORDER BY publish_date DESC LIMIT 3', (user_location,))
+        latest_notices = cursor.fetchall()
+    else:
+        cursor.execute('SELECT COUNT(*) as count FROM notices')
+        notices_count = cursor.fetchone()['count']
+        cursor.execute('SELECT * FROM notices ORDER BY publish_date DESC LIMIT 3')
+        latest_notices = cursor.fetchall()
     
     conn.close()
     
@@ -662,12 +678,13 @@ def admin_add_notice():
         description = request.form['description']
         valid_until = request.form.get('valid_until')
         scheme_id = request.form.get('scheme_id') or None
+        location = request.form.get('location', 'All')
         
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO notices (title, description, valid_until, scheme_id, created_by) VALUES (?, ?, ?, ?, ?)',
-            (title, description, valid_until, scheme_id, current_user.id)
+            'INSERT INTO notices (title, description, valid_until, scheme_id, location, created_by) VALUES (?, ?, ?, ?, ?, ?)',
+            (title, description, valid_until, scheme_id, location, current_user.id)
         )
         conn.commit()
         conn.close()
@@ -698,10 +715,11 @@ def admin_edit_notice(notice_id):
         description = request.form['description']
         valid_until = request.form.get('valid_until')
         scheme_id = request.form.get('scheme_id') or None
+        location = request.form.get('location', 'All')
         
         cursor.execute(
-            'UPDATE notices SET title=?, description=?, valid_until=?, scheme_id=? WHERE id=?',
-            (title, description, valid_until, scheme_id, notice_id)
+            'UPDATE notices SET title=?, description=?, valid_until=?, scheme_id=?, location=? WHERE id=?',
+            (title, description, valid_until, scheme_id, location, notice_id)
         )
         conn.commit()
         conn.close()
@@ -985,13 +1003,45 @@ def admin_edit_beneficiary(beneficiary_id):
 
 @app.route('/notices')
 def notices():
+    location = request.args.get('location', None)
+    
+    if current_user.is_authenticated and current_user.role != 'admin' and current_user.location:
+        location = current_user.location
+    elif location is None:
+        location = current_user.location if current_user.is_authenticated and current_user.location else ''
+        
+    query = request.args.get('q', '').strip()
+        
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM notices ORDER BY publish_date DESC')
+    
+    filters = []
+    params = []
+    
+    if location:
+        filters.append('(location = ? OR location = "All")')
+        params.append(location)
+        
+    if query:
+        filters.append('(title LIKE ? OR description LIKE ?)')
+        params.extend([f'%{query}%', f'%{query}%'])
+        
+    sql = 'SELECT * FROM notices'
+    if filters:
+        sql += ' WHERE ' + ' AND '.join(filters)
+    sql += ' ORDER BY publish_date DESC'
+        
+    cursor.execute(sql, tuple(params))
     notices = cursor.fetchall()
+    
+    cursor.execute('SELECT DISTINCT location FROM notices WHERE location IS NOT NULL AND location != "All"')
+    locations = [row['location'] for row in cursor.fetchall()]
+    default_locations = ['Paithan', 'Gangapur', 'Vaijapur', 'Sillod', 'Phulambri', 'Kannad', 'Khuldabad', 'Soegaon']
+    all_locations = sorted(list(set(locations + default_locations)))
+    
     conn.close()
     
-    return render_template('notices.html', notices=notices)
+    return render_template('notices.html', notices=notices, selected_location=location, locations=all_locations, search_query=query)
 
 @app.route('/notices/<int:notice_id>')
 def notice_detail(notice_id):
@@ -1020,6 +1070,10 @@ def search_page():
     scheme_categories = [row['department'] for row in cursor.execute('SELECT DISTINCT department FROM schemes').fetchall()]
     service_categories = [row['category'] for row in cursor.execute('SELECT DISTINCT category FROM services').fetchall()]
 
+    user_location = None
+    if current_user.is_authenticated and current_user.role != 'admin' and current_user.location:
+        user_location = current_user.location
+
     scheme_results = []
     notice_results = []
     service_results = []
@@ -1028,6 +1082,10 @@ def search_page():
         if search_type in ['all', 'schemes']:
             scheme_filters = []
             scheme_params = []
+
+            if user_location:
+                scheme_filters.append('(location = ? OR location = "All")')
+                scheme_params.append(user_location)
 
             if category:
                 scheme_filters.append('department = ?')
@@ -1053,6 +1111,11 @@ def search_page():
         if search_type in ['all', 'notices']:
             notice_filters = []
             notice_params = []
+            
+            if user_location:
+                notice_filters.append('(location = ? OR location = "All")')
+                notice_params.append(user_location)
+                
             if query:
                 notice_filters.append('(title LIKE ? OR description LIKE ?)')
                 notice_params.extend([f'%{query}%', f'%{query}%'])
@@ -1073,6 +1136,11 @@ def search_page():
         if search_type in ['all', 'services']:
             service_filters = []
             service_params = []
+            
+            if user_location:
+                service_filters.append('(city = ? OR city = "All" OR city = "Sample Village")')
+                service_params.append(user_location)
+                
             if category:
                 service_filters.append('category = ?')
                 service_params.append(category)
@@ -1112,7 +1180,9 @@ def schemes():
     category = request.args.get('category', '')
     
     location = request.args.get('location', None)
-    if location is None:
+    if current_user.is_authenticated and current_user.role != 'admin' and current_user.location:
+        location = current_user.location
+    elif location is None:
         location = current_user.location if current_user.is_authenticated and current_user.location else ''
         
     sort = request.args.get('sort', 'latest')
@@ -1356,7 +1426,9 @@ def services():
     category = request.args.get('category', '')
     
     location = request.args.get('location', None)
-    if location is None:
+    if current_user.is_authenticated and current_user.role != 'admin' and current_user.location:
+        location = current_user.location
+    elif location is None:
         location = current_user.location if current_user.is_authenticated and current_user.location else ''
     
     conn = get_db()
@@ -1420,12 +1492,13 @@ def add_notice():
         title = request.form['title']
         description = request.form['description']
         valid_until = request.form['valid_until']
+        location = request.form.get('location', 'All')
         
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO notices (title, description, valid_until, created_by) VALUES (?, ?, ?, ?)',
-            (title, description, valid_until, current_user.id)
+            'INSERT INTO notices (title, description, valid_until, location, created_by) VALUES (?, ?, ?, ?, ?)',
+            (title, description, valid_until, location, current_user.id)
         )
         conn.commit()
         conn.close()
@@ -1525,22 +1598,42 @@ def search():
         conn = get_db()
         cursor = conn.cursor()
         
+        user_location = None
+        if current_user.is_authenticated and current_user.role != 'admin' and current_user.location:
+            user_location = current_user.location
+        
         results = {}
         
-        # Search in schemes
-        cursor.execute('SELECT * FROM schemes WHERE title LIKE ? OR description LIKE ?', 
-                      (f'%{query}%', f'%{query}%'))
-        results['schemes'] = cursor.fetchall()
-        
-        # Search in notices
-        cursor.execute('SELECT * FROM notices WHERE title LIKE ? OR description LIKE ?', 
-                      (f'%{query}%', f'%{query}%'))
-        results['notices'] = cursor.fetchall()
-        
-        # Search in services
-        cursor.execute('SELECT * FROM services WHERE name LIKE ? OR category LIKE ?', 
-                      (f'%{query}%', f'%{query}%'))
-        results['services'] = cursor.fetchall()
+        if user_location:
+            # Search in schemes
+            cursor.execute('SELECT * FROM schemes WHERE (title LIKE ? OR description LIKE ?) AND (location = ? OR location = "All")', 
+                          (f'%{query}%', f'%{query}%', user_location))
+            results['schemes'] = cursor.fetchall()
+            
+            # Search in notices
+            cursor.execute('SELECT * FROM notices WHERE (title LIKE ? OR description LIKE ?) AND (location = ? OR location = "All")', 
+                          (f'%{query}%', f'%{query}%', user_location))
+            results['notices'] = cursor.fetchall()
+            
+            # Search in services
+            cursor.execute('SELECT * FROM services WHERE (name LIKE ? OR category LIKE ?) AND (city = ? OR city = "All" OR city = "Sample Village")', 
+                          (f'%{query}%', f'%{query}%', user_location))
+            results['services'] = cursor.fetchall()
+        else:
+            # Search in schemes
+            cursor.execute('SELECT * FROM schemes WHERE title LIKE ? OR description LIKE ?', 
+                          (f'%{query}%', f'%{query}%'))
+            results['schemes'] = cursor.fetchall()
+            
+            # Search in notices
+            cursor.execute('SELECT * FROM notices WHERE title LIKE ? OR description LIKE ?', 
+                          (f'%{query}%', f'%{query}%'))
+            results['notices'] = cursor.fetchall()
+            
+            # Search in services
+            cursor.execute('SELECT * FROM services WHERE name LIKE ? OR category LIKE ?', 
+                          (f'%{query}%', f'%{query}%'))
+            results['services'] = cursor.fetchall()
         
         conn.close()
         
